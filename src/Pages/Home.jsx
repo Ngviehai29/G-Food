@@ -61,7 +61,7 @@ export const Home = () => {
           <h1 className='text-[48px] text-white font-bold'>Green Food</h1>
           <h4 className='text-[#ffffff] text-xl font-nomal tracking-[0px] -mt-2 ml-[140px]'>for green life!</h4>
           <h4 className='text-[#ffffffd4] text-2xl italic font-["Cormorant"] tracking-[3px] mt-4'>Thực phẩm xanh cho cuộc sống xanh!</h4>
-          <Link to={'/about'} className={`inline-block bg-main text-[#e6e6e6] px-4 py-2 items-center font-nomal text-[18px] rounded-lg mt-8 linear cursor-pointer animate-bounce`}>Read More<i class="fa-solid fa-angle-right text-[16px]"></i></Link>
+          <Link to={'/about'} className={`inline-block bg-main text-[#ffffff] px-4 py-2 items-center font-nomal text-[18px] rounded-lg mt-8 linear cursor-pointer animate-bounce`}>Read More<i class="fa-solid fa-angle-right text-[16px]"></i></Link>
         </div>
       </div>
 

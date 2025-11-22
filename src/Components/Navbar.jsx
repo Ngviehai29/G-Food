@@ -37,23 +37,23 @@ export const Navbar = () => {
 
                 <div className="center">
                     <ul className={`flex gap-6 text-[16px] font-bold ${scrolled ? "" : "text-white"}`}>
-                        <li><Link to="/" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>Home</Link></li>
+                        <li><Link to="/" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/' ? "!text-main border-main" : "border-[#fff0]"}`}>Home</Link></li>
 
-                        <li><Link to="/about" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/about' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>About Us</Link></li>
+                        <li><Link to="/about" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/about' ? "!text-main border-main" : "border-[#fff0]"}`}>About Us</Link></li>
 
-                        <li><a href="/pages" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/pages' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>Pages</a></li>
+                        <li><a href="/pages" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/pages' ? "!text-main border-main" : "border-[#fff0]"}`}>Pages</a></li>
 
-                        <li><a href="/service" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/service' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>Service</a></li>
+                        <li><a href="/service" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/service' ? "!text-main border-main" : "border-[#fff0]"}`}>Service</a></li>
 
-                        <li><a href="/blog" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/blog' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>Blog</a></li>
+                        <li><a href="/blog" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/blog' ? "!text-main border-main" : "border-[#fff0]"}`}>Blog</a></li>
 
-                        <li><a href="/contact" className={`transition-all duration-300 border-b-2 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/contact' ? "!text-main border-b-2 border-main" : "border-[#fff0]"}`}>Contact</a></li>
+                        <li><a href="/contact" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/contact' ? "!text-main border-main" : "border-[#fff0]"}`}>Contact</a></li>
                     </ul>
                 </div>
 

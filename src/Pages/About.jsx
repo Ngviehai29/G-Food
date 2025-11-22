@@ -32,7 +32,7 @@ export const About = () => {
                     <h1 className='text-[45px] text-white z-10 font-bold'>About Us</h1>
                     {/* <h4 className='text-[#ffffff] text-xl font-nomal tracking-[0px] -mt-2 ml-[98px]'>for green life!</h4> */}
                     <h4 className='text-[#ffffffd4] text-2xl italic font-["Cormorant"] tracking-[0px] mt-4 w-[450px]'><span className='text-main font-bold font-["Dancing_Script"] text-[30px]'>Green</span> food là nền tảng kết nối cộng đồng với mục tiêu chia sẻ thực phẩm sạch, an toàn và bền vững. Chúng tôi tin rằng mỗi bữa ăn xanh không chỉ tốt cho sức khỏe, mà còn góp phần giảm lãng phí và bảo vệ môi trường.!</h4>
-                    <button className='bg-main text-[#e6e6e6] px-4 py-2 items-center font-normal text-[18px] rounded-lg mt-8 cursor-pointer animate-bounce'>Read More<i class="fa-solid fa-angle-right text-[16px]"></i></button>
+                    <button className='bg-main text-[#ffffff] px-4 py-2 items-center font-normal text-[18px] rounded-lg mt-8 cursor-pointer animate-bounce'>Read More<i class="fa-solid fa-angle-right text-[16px]"></i></button>
                 </div>
             </div>
             {/* <div className=" bg-[#F2F4F7] h-[1000px]">fdfdfdfdf</div> */}
