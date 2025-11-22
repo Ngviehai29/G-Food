@@ -28,7 +28,7 @@ export const Home = () => {
         <img src={slide} alt="" className='top-0 object-cover w-screen h-screen object-[0%_10%]' />
         {/* <div className="bg-drak w-[100%] h-screen bg-black absolute top-0 opacity-15 z-[1]"></div> */}
         <img src={slogan} alt="" ref={ref} className={`slogan absolute top-[50%] left-[50%] w-[1050px] translate-y-[-42%] translate-x-[-25%] z-[2] brightness-[125%] duration-[1s] transition-all ${visible ? "opacity-100" : "opacity-0"}`} />
-        
+
         <div className='flex absolute bottom-[-1px] h-[12px]'>
           <img src={grass01} alt=""/>
           <img src={grass01} alt=""/>
