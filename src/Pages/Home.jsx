@@ -23,11 +23,11 @@ export const Home = () => {
   }, []);
 
   return (
-    <div className='inline w-screen'>
+    <div className='inline w-screen transition-all duration-1500'>
       <div className="slide relative z-[0] overflow-hidden">
-        <img src={slide} alt="" className='top-0 object-cover w-screen h-screen object-[0%_10%]' />
+        <img src={slide} alt="" className='top-0 object-cover w-screen h-screen object-[0%_40%]' />
         {/* <div className="bg-drak w-[100%] h-screen bg-black absolute top-0 opacity-15 z-[1]"></div> */}
-        <img src={slogan} alt="" ref={ref} className={`slogan absolute top-[50%] left-[50%] w-[1050px] translate-y-[-42%] translate-x-[-25%] z-[2] brightness-[125%] duration-[1s] transition-all ${visible ? "opacity-100" : "opacity-0"}`} />
+        <img src={slogan} alt="" ref={ref} className={`slogan absolute top-[50%] left-[50%] w-[1000px] translate-y-[-42%] translate-x-[-25%] z-[2] brightness-[125%] duration-[1s] transition-all ${visible ? "opacity-100" : "opacity-0"}`} />
 
         <div className='flex absolute bottom-[-1px] h-[12px]'>
           <img src={grass01} alt=""/>
@@ -39,7 +39,7 @@ export const Home = () => {
           <img src={grass01} alt=""/>
         </div>
 
-        <div className='flex absolute bottom-[-1px] h-[45px] '>
+        {/* <div className='flex absolute bottom-[-1px] h-[45px] '>
           <img src={grass02} alt="" />
           <img src={grass02} alt="" />
           <img src={grass02} alt="" />
@@ -49,7 +49,7 @@ export const Home = () => {
           <img src={grass02} alt="" />
           <img src={grass02} alt="" />
           <img src={grass02} alt="" />
-        </div>
+        </div> */}
 
 
         <div
@@ -68,7 +68,7 @@ export const Home = () => {
       {/* Message */}
       <div className='bg-gradient-to-b from-[#e2e7d6] to-bg w-full'>
         <img src={tree} alt="" className='w-[30px] mx-auto pt-[30px]'/>
-        <p className='w-[650px] mx-auto font-["Dancing_Script"] text-center text-[22px] text-[#0f3714] pt-[20px] pb-[50px]'><span className='text-main'>Green Food</span> tin rằng mỗi phần lương thực dư thừa đều mang trong mình một cơ hội được sẻ chia — cơ hội để bạn giúp đỡ cộng đồng, giảm lãng phí và góp phần xây dựng một tương lai xanh hơn.</p>
+        <p className='w-[850px] mx-auto font-["Dancing_Script"] text-center text-[22px] text-[#0f3714] pt-[20px] pb-[50px]'><span className='text-main'>Green Food</span> tin rằng mỗi phần lương thực dư thừa đều mang trong mình một cơ hội được sẻ chia — cơ hội để bạn giúp đỡ cộng đồng, giảm lãng phí và góp phần xây dựng một tương lai xanh hơn.</p>
       </div>
 
       {/* filter */}

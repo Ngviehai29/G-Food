@@ -3,17 +3,28 @@ import { Navbar } from './Components/Navbar';
 import { About } from './Pages/About';
 import { Home } from './Pages/Home';
 import { Routes, Route, useLocation } from "react-router-dom";
+import { SignUp } from './Pages/SignUp';
+import { useEffect } from 'react';
+import { Footer } from './Components/Footer';
+import { Blog } from './Pages/Blog';
 
-function App() {  
+function App() {
+  const location = useLocation();
+  const pathname = useLocation();
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  
   return (
-
     <div className="App">
-      <Navbar />
+      {location.pathname !== "/signup" && (<Navbar/>)}
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/' element={<Home/>} />
+        <Route path='/about' element={<About/>}/>
+        <Route path='/blog' element={<Blog/>}/>
       </Routes>
-      {/* <Home /> */}
+      {location.pathname !== "/signup" && (<Footer/>)}
     </div>
   );
 }

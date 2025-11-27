@@ -49,8 +49,8 @@ export const Navbar = () => {
                         <li><a href="/service" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/service' ? "!text-main border-main" : "border-[#fff0]"}`}>Service</a></li>
 
-                        <li><a href="/blog" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/blog' ? "!text-main border-main" : "border-[#fff0]"}`}>Blog</a></li>
+                        <li><Link to="/blog" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/blog' ? "!text-main border-main" : "border-[#fff0]"}`}>Blog</Link></li>
 
                         <li><a href="/contact" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/contact' ? "!text-main border-main" : "border-[#fff0]"}`}>Contact</a></li>
@@ -61,9 +61,12 @@ export const Navbar = () => {
                     <div className="Icon_search cursor-pointer">
                         <img className={`size-5 transition-all duration-[0.5s] ${scrolled ? "" : "grayscale invert"}`} src={iconsearch} alt="" />
                     </div>
-                    <div className="relative Logo_Acc bg-main h-[42px] w-[42px] rounded-[50%] flex items-center cursor-pointer">
-                        <img class='absolute grayscale invert size-5 left-[50%] translate-x-[-50%]' src={LogoAcc} alt="" />
-                    </div>
+                    <Link to="/signup">
+                        <div className="relative Logo_Acc bg-main h-[42px] w-[42px] rounded-[50%] flex items-center cursor-pointer">
+                            <img class='absolute grayscale invert size-5 left-[50%] translate-x-[-50%]' src={LogoAcc} alt="" />
+                        </div>
+                    </Link>
+
                 </div>
             </div>
         </div>
