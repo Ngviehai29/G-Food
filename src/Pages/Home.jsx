@@ -7,6 +7,7 @@ import grass02 from "../G-Food-Images/grass02.svg"
 import tree from "../G-Food-Images/tree-01.svg"
 import { Card_Product } from '../Components/Card_Product';
 import { Link } from 'react-router-dom';
+import { Card_Blog_Slide } from '../Components/Card_Blog_Slide';
 
 export const Home = () => {
   const ref = useRef(null);
@@ -66,7 +67,7 @@ export const Home = () => {
       </div>
 
       {/* Message */}
-      <div className='bg-gradient-to-b from-[#e2e7d6] to-bg w-full'>
+      <div className='bg-gradient-to-b from-[#e2e7d6] to-white w-full'>
         <img src={tree} alt="" className='w-[30px] mx-auto pt-[30px]'/>
         <p className='w-[850px] mx-auto font-["Dancing_Script"] text-center text-[22px] text-[#0f3714] pt-[20px] pb-[50px]'><span className='text-main'>Green Food</span> tin rằng mỗi phần lương thực dư thừa đều mang trong mình một cơ hội được sẻ chia — cơ hội để bạn giúp đỡ cộng đồng, giảm lãng phí và góp phần xây dựng một tương lai xanh hơn.</p>
       </div>
@@ -74,6 +75,11 @@ export const Home = () => {
       {/* filter */}
       <div>
 
+      </div>
+
+      {/* Blog */}
+      <div className='-mt-8'>
+        <Card_Blog_Slide/>
       </div>
 
       {/* List Product */}

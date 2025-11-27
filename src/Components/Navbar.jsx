@@ -43,17 +43,17 @@ export const Navbar = () => {
                         <li><Link to="/about" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/about' ? "!text-main border-main" : "border-[#fff0]"}`}>About Us</Link></li>
 
-                        <li><a href="/pages" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/pages' ? "!text-main border-main" : "border-[#fff0]"}`}>Pages</a></li>
+                        <li><Link to="/pages" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/pages' ? "!text-main border-main" : "border-[#fff0]"}`}>Pages</Link></li>
 
-                        <li><a href="/service" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/service' ? "!text-main border-main" : "border-[#fff0]"}`}>Service</a></li>
+                        <li><Link to="/service" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/service' ? "!text-main border-main" : "border-[#fff0]"}`}>Service</Link></li>
 
                         <li><Link to="/blog" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/blog' ? "!text-main border-main" : "border-[#fff0]"}`}>Blog</Link></li>
 
-                        <li><a href="/contact" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/contact' ? "!text-main border-main" : "border-[#fff0]"}`}>Contact</a></li>
+                        <li><Link to="/contact" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
+                            ${location.pathname === '/contact' ? "!text-main border-main" : "border-[#fff0]"}`}>Contact</Link></li>
                     </ul>
                 </div>
 
