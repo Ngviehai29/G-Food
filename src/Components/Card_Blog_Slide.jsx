@@ -6,6 +6,23 @@ export const Card_Blog_Slide = () => {
     const largeItem = data_blog.find(item => item.type === "large");
     const smallItem = data_blog.slice(1, 4);
     const [SelectedBlog, setSelectedBlog] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+    const handleOpenlarge = (largeItem) => {
+        setSelectedBlog(largeItem);
+        setTimeout(() => setVisible(true)); 
+    };
+
+    const handleOpensmall = (smallItem) => {
+        setSelectedBlog(smallItem);
+        setTimeout(() => setVisible(true));
+    };
+
+    const handleClose = () => {
+        setVisible(false);
+        setTimeout(() => setSelectedBlog(null), 500);
+    };
+
     return (
         <div>
             <div className='w-[1150px] mx-auto bg-gradient-to-b from-[#E2DCD0] to-white rounded-[20px] my-14 py-14 px-[100px]'>
@@ -17,7 +34,7 @@ export const Card_Blog_Slide = () => {
 
                     <div className='group bg-white h-[485px] rounded-[20px] w-[48.5%] p-5 shadow-lg'>
                         <div className='relative h-[250px] rounded-[20px] overflow-hidden'>
-                            <img onClick={() => setSelectedBlog(largeItem)} src={largeItem.img} alt="" className='group-hover:scale-[110%] transition-all duration-500 w-full h-full object-cover cursor-pointer' />
+                            <img onClick={() => handleOpenlarge(largeItem)} src={largeItem.img} alt="" className='group-hover:scale-[110%] transition-all duration-500 w-full h-full object-cover cursor-pointer' />
                             <div className='absolute bottom-0 left-0 flex bg-main text-white px-6 py-2 items-center gap-1 rounded-tr-[20px]'>
                                 <i class="fa-solid fa-user text-[12px]"></i>
                                 <p className='text-[14px] font-semibold'>By {largeItem.by}</p>
@@ -29,14 +46,14 @@ export const Card_Blog_Slide = () => {
                         </div>
                         <div className='h-[185px] flex flex-col justify-between'>
                             <div>
-                                <h2 onClick={() => setSelectedBlog(largeItem)} className='text-[#0A250E] font-bold text-[20px] px-4 mt-4 hover:text-main cursor-pointer transition-all duration-300 line-clamp-2'>{largeItem.title}</h2>
+                                <h2 onClick={() => handleOpenlarge(largeItem)} className='text-[#0A250E] font-bold text-[20px] px-4 mt-4 hover:text-main cursor-pointer transition-all duration-300 line-clamp-2'>{largeItem.title}</h2>
                                 <p className='text-[#0F3714] font-light text-[14px] px-4 mt-2 line-clamp-4'>{largeItem.describe}</p>
                             </div>
                             <div className='px-4 flex justify-between mt-4 items-center'>
                                 <div className='text-main font-nomal'>-------------------------------------</div>
                                 <div className='flex gap-2 items-center'>
                                     <div className='text-[#0A250E] text-[14px]'>Read More</div>
-                                    <div onClick={() => setSelectedBlog(largeItem)} className='w-[30px] h-[30px] cursor-pointer bg-main hover:bg-[#0F3714] transition-all duration-300 flex justify-center items-center rounded-[50%]'><i class="fa-solid fa-arrow-right-long text-white text-[10px] pt-[2px] pr-[2px]"></i></div>
+                                    <div onClick={() => handleOpenlarge(largeItem)} className='w-[30px] h-[30px] cursor-pointer bg-main hover:bg-[#0F3714] transition-all duration-300 flex justify-center items-center rounded-[50%]'><i class="fa-solid fa-arrow-right-long text-white text-[10px] pt-[2px] pr-[2px]"></i></div>
                                 </div>
                             </div>
                         </div>
@@ -48,7 +65,7 @@ export const Card_Blog_Slide = () => {
                             <div key={item.id} className='group flex h-[145px] gap-0 items-center relative'>
 
                                 <div className='w-[50%] h-full rounded-l-[20px] overflow-hidden'>
-                                    <img onClick={() => setSelectedBlog(item)} src={item.img} alt=""
+                                    <img onClick={() => handleOpensmall(item)} src={item.img} alt=""
                                         className='group-hover:scale-[110%] transition-all duration-500 w-full h-full object-cover cursor-pointer'
                                     />
                                 </div>
@@ -58,7 +75,7 @@ export const Card_Blog_Slide = () => {
                                         <i class="fa-solid fa-clock text-[12px] text-main"></i>{item.date}
                                     </p>
 
-                                    <h2 onClick={() => setSelectedBlog(item)} className='font-bold leading-5 line-clamp-3 transition-all duration-300 hover:text-main cursor-pointer'>
+                                    <h2 onClick={() => handleOpensmall(item)} className='font-bold leading-5 line-clamp-3 transition-all duration-300 hover:text-main cursor-pointer'>
                                         {item.title}:
                                         <br />{item.describe}
                                     </h2>
@@ -75,16 +92,16 @@ export const Card_Blog_Slide = () => {
             </div>
             {SelectedBlog && (
                 <div
-                    className="fixed inset-0 bg-black/50 flex justify-center items-center mt-16 z-50"
-                    onClick={() => setSelectedBlog(null)}   // ← Click nền để tắt
+                    className={`fixed inset-0 bg-black/50 transition-all duration-500 flex justify-center items-center mt-16 z-[98] ${visible ? "opacity-100 pt-[0]" : "opacity-0 pt-[800px]"}`}
+                    onClick={() => handleClose()} // ← Click nền để tắt
                 >
                     <div
-                        className="bg-white rounded-2xl p-6 w-[90%] max-w-[900px] relative"
+                        className={`bg-white rounded-2xl p-6 relative transition-all duration-500`}
                         onClick={(e) => e.stopPropagation()} // ← Chặn sự kiện lan ra ngoài
                     >
                         <button
                             className="absolute top-[10px] right-[10px] text-[12px] text-white bg-main w-[28px] h-[28px] rounded-[50%] items-center flex justify-center"
-                            onClick={() => setSelectedBlog(null)}
+                            onClick={() => handleClose()}
                         >
                             ✕
                         </button>

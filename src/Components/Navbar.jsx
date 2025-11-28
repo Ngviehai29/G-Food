@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import iconsearch from '../G-Food-Images/icon_search.svg'
 import LogoAcc from '../G-Food-Images/Logo_Acc.svg'
 import { Link, useLocation } from 'react-router-dom'
-export const Navbar = () => {
+export const Navbar = ({ settologin }) => {
     const [scrolled, setScrolled] = useState(false);
     useEffect(() => {
         const handleScroll = () => {
@@ -28,15 +28,15 @@ export const Navbar = () => {
                 <img src={grass01} alt="" />
                 <img src={grass01} alt="" />
             </div>
-            <div className={`container flex items-center justify-between mx-auto w-full h-full px-[50px] transition-all duration-500`}>
-                <div className="left">
+            <div className={`items-center flex justify-between mx-auto w-full h-full px-[50px] transition-all duration-500`}>
+                <div className="w-[30%]">
                     <Link to='/' className="Logo text-[#97b545] font-bold text-[32px] font-['Dancing_Script'] relative pl-[12px]">
                         G- <img className='absolute top-0 left-[0px] rotate-[-46deg] inline-block w-[20px]' src={leaf} alt="" /><span className={`transition-all duration-[0.5s] ${scrolled ? "text-black" : "text-white"}`}>Food</span>
                     </Link>
                 </div>
 
-                <div className="center">
-                    <ul className={`flex gap-6 text-[16px] font-bold ${scrolled ? "" : "text-white"}`}>
+                <div className="w-[40%]">
+                    <ul className={`flex justify-center gap-6 text-[16px] font-bold ${scrolled ? "" : "text-white"}`}>
                         <li><Link to="/" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/' ? "!text-main border-main" : "border-[#fff0]"}`}>Home</Link></li>
 
@@ -57,15 +57,20 @@ export const Navbar = () => {
                     </ul>
                 </div>
 
-                <div className="right flex gap-6 items-center">
+                <div className="right flex justify-end gap-6 items-center w-[30%]">
                     <div className="Icon_search cursor-pointer">
                         <img className={`size-5 transition-all duration-[0.5s] ${scrolled ? "" : "grayscale invert"}`} src={iconsearch} alt="" />
                     </div>
-                    <Link to="/signup">
+                    <div className={` flex gap-2 font-[roboto] text-[14px]`}>
+                        <Link to="/signup" onClick={()=>settologin(true)} className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng ký</Link>
+                        <p className={`transition-all duration-300 ${scrolled ? "text-[#000000db]" : "text-white"}`}>||</p>
+                        <Link to="/signup" onClick={()=>settologin(false)}className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng nhập</Link>
+                    </div>
+                    {/* <Link to="/signup">
                         <div className="relative Logo_Acc bg-main h-[42px] w-[42px] rounded-[50%] flex items-center cursor-pointer">
                             <img class='absolute grayscale invert size-5 left-[50%] translate-x-[-50%]' src={LogoAcc} alt="" />
                         </div>
-                    </Link>
+                    </Link> */}
 
                 </div>
             </div>

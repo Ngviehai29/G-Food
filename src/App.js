@@ -4,27 +4,29 @@ import { About } from './Pages/About';
 import { Home } from './Pages/Home';
 import { Routes, Route, useLocation } from "react-router-dom";
 import { SignUp } from './Pages/SignUp';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Footer } from './Components/Footer';
 import { Blog } from './Pages/Blog';
 
 function App() {
   const location = useLocation();
   const pathname = useLocation();
-  useEffect(()=>{
+  const [tologin, settologin] = useState(true);
+
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
-  
+
   return (
     <div className="App">
-      {location.pathname !== "/signup" && (<Navbar/>)}
+      {location.pathname !== "/signup" && (<Navbar settologin={settologin} />)}
       <Routes>
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/' element={<Home/>} />
-        <Route path='/about' element={<About/>}/>
-        <Route path='/blog' element={<Blog/>}/>
+        <Route path='/signup' element={<SignUp tologin={tologin} settologin={settologin} />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/blog' element={<Blog />} />
       </Routes>
-      {location.pathname !== "/signup" && (<Footer/>)}
+      {location.pathname !== "/signup" && (<Footer />)}
     </div>
   );
 }
