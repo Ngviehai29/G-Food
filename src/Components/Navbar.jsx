@@ -41,7 +41,7 @@ export const Navbar = ({ settologin }) => {
                             ${location.pathname === '/' ? "!text-main border-main" : "border-[#fff0]"}`}>Home</Link></li>
 
                         <li><Link to="/about" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
-                            ${location.pathname === '/about' ? "!text-main border-main" : "border-[#fff0]"}`}>About Us</Link></li>
+                            ${location.pathname === '/about' ? "!text-main border-main" : "border-[#fff0]"}`}>About</Link></li>
 
                         <li><Link to="/pages" className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "hover:text-[#ffffffa6]"}
                             ${location.pathname === '/pages' ? "!text-main border-main" : "border-[#fff0]"}`}>Pages</Link></li>
