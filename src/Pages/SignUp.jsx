@@ -2,12 +2,13 @@ import React, { useState } from 'react'
 import image1 from '../G-Food-Images/about-3-ver4-invert.svg'
 import image2 from '../G-Food-Images/about-3-ver4-invert.svg'
 import leaf from "../G-Food-Images/leaf.svg"
-import { Link, Navigate, useNavigate  } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { login } from '../Services/authService.js'
 import { registerUser } from '../Services/authService.js'
 import { useScrollAnimation } from '../Components/useScrollAnimation.js'
+import { toast } from 'sonner'
 
-export const SignUp = ({tologin, settologin}) => {
+export const SignUp = ({ tologin, settologin }) => {
     const [sexPopup, setSexPopup] = useState("");
     const [openSex, setOpenSex] = useState(false);
 
@@ -19,6 +20,7 @@ export const SignUp = ({tologin, settologin}) => {
     const [sex, setSex] = useState("");
 
     const [error, setError] = useState("");
+    const [clause, setclause] = useState(false);
 
     const navigate = useNavigate();
     const anisignin = useScrollAnimation();
@@ -28,26 +30,47 @@ export const SignUp = ({tologin, settologin}) => {
         e.preventDefault();
         try {
             const data = await login(email, password);
-            alert("đăng nhập thành công");
+            toast.success("Đăng nhập thành công!");
             localStorage.setItem("token", data.token);
             console.log(data)
             navigate("/");
         } catch (err) {
             console.error(err);
-            setError("Sai email hoặc mật khẩu");
+
+            if (email === "" && password === "") {
+                toast.error("Vui lòng nhập email và mật khẩu!");
+            } else if (email === "") {
+                toast.error("Vui lòng nhập email!")
+            } else if (password === "") {
+                toast.error("Vui lòng nhập mật khẩu!")
+            } else {
+                toast.error("Sai email hoặc mật khẩu!");
+            }
         }
     }
 
     const handSubmitRegister = async (e) => {
         e.preventDefault();
+        if (username === "") return toast.error("Username không được để trống!");
+        if (username.length <= 1) return toast.error("Vui lòng nhập tên đầy đủ!");
+        if (email === "") return toast.error("Email không được để trống!");
+        if (password === "") return toast.error("Mật khẩu không được để trống!");
+        if (password.length <= 5) return toast.error("Mật khẩu của bạn quá non!");
+        if (phone === "") return toast.error("Số điện thoại không được để trống!");
+        if (location === "") return toast.error("Vị trí không được để trống!");
+        if (location.length <= 2) return toast.error("Vui lòng nhập địa chỉ cụ thể!");
+        if (sex === "") return toast.error("Giới tính không được để trống!");
+        if (!clause) return toast.error("Vui lòng đồng ý điều khoản!");
+
         try {
             const res = await registerUser(username, email, password, phone, location, sex);
-            alert("đăng ký thành công");
+            toast.success("Đăng ký tài khoản thành công!");
             settologin(false);
 
         } catch (err) {
-            setError("Đăng ký thát bại!");
+            toast.error("Email của bạn không hợp lệ hoặc đã có người đăng ký!");
         }
+
     }
 
     return (
@@ -85,29 +108,29 @@ export const SignUp = ({tologin, settologin}) => {
                                 <div className='relative'>
                                     <p className='font-["Poppins"] font-semibold text-sm text-[#00000062]'>Sex</p>
 
-                                    
+
                                     <div
                                         onClick={() => setOpenSex(!openSex)}
-                                        
-                                        className={`cursor-pointer text-[16px] placeholder:text-[14px] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full flex justify-between items-center ${ sex ? "border-main" : ""}`}
+
+                                        className={`cursor-pointer text-[16px] placeholder:text-[14px] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full flex justify-between items-center ${sex ? "border-main" : ""}`}
                                     >
                                         <span className={sexPopup ? "text-black" : "text-[#8e8e8e] text-[14px] mt-[3px]"}>{sexPopup || "Nam / Nữ"}</span>
                                     </div>
 
-                                    
+
                                     {openSex && (
                                         <div className='absolute left-0 right-0 bg-white shadow-lg rounded-md border mt-2 z-50'>
                                             <div onClick={() => { setOpenSex(false); }}
                                                 className='fixed top-0 left-0 w-screen h-screen -z-40'></div>
 
                                             <div
-                                                onClick={() => { setSexPopup("Nam");setSex("true"); setOpenSex(false); }}
+                                                onClick={() => { setSexPopup("Nam"); setSex("true"); setOpenSex(false); }}
                                                 className='px-3 py-2 hover:bg-gray-100 cursor-pointer text-[#00000062] text-[14px]'
                                             >
                                                 Nam
                                             </div>
                                             <div
-                                                onClick={() => { setSexPopup("Nữ");setSex("false"); setOpenSex(false); }}
+                                                onClick={() => { setSexPopup("Nữ"); setSex("false"); setOpenSex(false); }}
                                                 className='px-3 py-2 hover:bg-gray-100 cursor-pointer text-[#00000062] text-[14px]'
                                             >
                                                 Nữ
@@ -134,7 +157,7 @@ export const SignUp = ({tologin, settologin}) => {
 
                         <div className='flex justify-between items-center text-[#00000081] mt-8'>
                             <div className='flex h-full items-center gap-1'>
-                                <input type="checkbox" name="" id="" className='accent-black mt-[2px]' />
+                                <input onChange={(e) => setclause(e.target.checked)} type="checkbox" name="" id="" className='accent-black mt-[2px]' />
                                 <p className='text-[14px]'>Đồng ý với các điều khoảng của chúng tôi!</p>
                             </div>
                             <a href="#" className='text-[14px] text-main'>Điều khoản?</a>
@@ -172,14 +195,14 @@ export const SignUp = ({tologin, settologin}) => {
                                 <p className='font-["Poppins"] font-semibold text-sm text-[#00000062]'>Email</p>
                                 <input type="text" name="" id="" placeholder='Nhập địa chỉ email'
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className={`mt-[0px] text-[16px] focus:outline-none placeholder:text-[14px] focus:placeholder-[#0000] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full ${email ? "border-main":""}`} />
+                                    className={`mt-[0px] text-[16px] focus:outline-none placeholder:text-[14px] focus:placeholder-[#0000] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full ${email ? "border-main" : ""}`} />
                             </div>
 
                             <div>
                                 <p className='font-["Poppins"] font-semibold text-sm text-[#00000062]'>Password</p>
                                 <input type="password" name="" id="" placeholder='Nhập mật khẩu'
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className={`mt-[0px] text-[16px] focus:outline-none placeholder:text-[14px] focus:placeholder-[#0000] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full ${password ? "border-main":""}`} />
+                                    className={`mt-[0px] text-[16px] focus:outline-none placeholder:text-[14px] focus:placeholder-[#0000] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full ${password ? "border-main" : ""}`} />
                             </div>
 
                         </div>

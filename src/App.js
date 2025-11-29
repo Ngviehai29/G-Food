@@ -7,7 +7,7 @@ import { SignUp } from './Pages/SignUp';
 import { useEffect, useState } from 'react';
 import { Footer } from './Components/Footer';
 import { Blog } from './Pages/Blog';
-
+import { Toaster } from "sonner";
 function App() {
   const location = useLocation();
   const pathname = useLocation();
@@ -18,8 +18,10 @@ function App() {
   }, [pathname]);
 
   return (
+    <>
     <div className="App">
       {location.pathname !== "/signup" && (<Navbar settologin={settologin} />)}
+      {/* <Catch1/> */}
       <Routes>
         <Route path='/signup' element={<SignUp tologin={tologin} settologin={settologin} />} />
         <Route path='/' element={<Home />} />
@@ -28,6 +30,8 @@ function App() {
       </Routes>
       {location.pathname !== "/signup" && (<Footer />)}
     </div>
+    <Toaster richColors position="top-right" visibleToasts={10}/>
+    </>
   );
 }
 

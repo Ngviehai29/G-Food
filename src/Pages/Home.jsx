@@ -84,6 +84,9 @@ export const Home = () => {
 
       {/* List Product */}
       <div className='bg-[#F2F4F7]'>
+        <h1 className='text-center text-[40px] font-[roboto] font-bold pt-8'><span className='text-main'>Our</span> Products</h1>
+        <div className='w-14 bg-main h-[2px] mx-auto my-2'></div>
+        <p className='mx-auto text-center text-[16px] font-[roboto] font-light max-w-[500px] text-xamden py-4 mb-6'>Chia sẻ sản phẩm để cùng lan tỏa những giá trị nhỏ bé nhưng đầy ý nghĩa cho cộng đồng.</p>
         <div className="bg-[#F2F4F7] m-auto w-[1150px] h-[1000px]">
           <Card_Product />
         </div>

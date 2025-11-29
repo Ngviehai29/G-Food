@@ -63,7 +63,7 @@ export const Navbar = ({ settologin }) => {
                     </div>
                     <div className={` flex gap-2 font-[roboto] text-[14px]`}>
                         <Link to="/signup" onClick={()=>settologin(true)} className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng ký</Link>
-                        <p className={`transition-all duration-300 ${scrolled ? "text-[#000000db]" : "text-white"}`}>||</p>
+                        <p className={`transition-all duration-300 ${scrolled ? "text-[#00000076]" : "text-[#ffffff82]"}`}>||</p>
                         <Link to="/signup" onClick={()=>settologin(false)}className={`transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng nhập</Link>
                     </div>
                     {/* <Link to="/signup">
