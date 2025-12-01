@@ -7,6 +7,10 @@ import { SignUp } from './Pages/SignUp';
 import { useEffect, useState } from 'react';
 import { Footer } from './Components/Footer';
 import { Blog } from './Pages/Blog';
+import { Toaster } from "sonner";
+// Phân Quyền
+import UserRoute from './Routes/UserRoute';
+// import AdminRoute from './Routes/AdminRoute';
 
 function App() {
   const location = useLocation();
@@ -18,16 +22,23 @@ function App() {
   }, [pathname]);
 
   return (
+    <>
     <div className="App">
       {location.pathname !== "/signup" && (<Navbar settologin={settologin} />)}
+      
       <Routes>
+
         <Route path='/signup' element={<SignUp tologin={tologin} settologin={settologin} />} />
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/blog' element={<Blog />} />
+        <Route path='/blog' element={<UserRoute><Blog /></UserRoute>} />
+
       </Routes>
+
       {location.pathname !== "/signup" && (<Footer />)}
     </div>
+    <Toaster richColors position="top-right" visibleToasts={10}/>
+    </>
   );
 }
 
