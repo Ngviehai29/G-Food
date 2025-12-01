@@ -1,12 +1,11 @@
 import React, { useState } from 'react'
-import image1 from '../G-Food-Images/about-3-ver4-invert.svg'
 import image2 from '../G-Food-Images/about-3-ver4-invert.svg'
-import leaf from "../G-Food-Images/leaf.svg"
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { login } from '../Services/authService.js'
 import { registerUser } from '../Services/authService.js'
 import { useScrollAnimation } from '../Components/useScrollAnimation.js'
 import { toast } from 'sonner'
+import { Loading } from '../Components/Loading.jsx'
 
 export const SignUp = ({ tologin, settologin }) => {
     const [sexPopup, setSexPopup] = useState("");
@@ -19,42 +18,74 @@ export const SignUp = ({ tologin, settologin }) => {
     const [location, setLocation] = useState("");
     const [sex, setSex] = useState("");
 
-    const [error, setError] = useState("");
     const [clause, setclause] = useState(false);
 
     const navigate = useNavigate();
     const anisignin = useScrollAnimation();
     const anilogin = useScrollAnimation();
 
+    const [loading, setLoading] = useState(false);
+
     const handleSubmitLogin = async (e) => {
         e.preventDefault();
+
+        if (email === "" && password === "") {
+            return toast.error("Vui lòng nhập email và mật khẩu!");
+        }
+        if (email === "") {
+            return toast.error("Vui lòng nhập email!")
+        } else if (!email.endsWith("@gmail.com"))
+            return toast.error("Email không hợp lệ!");
+        if (password === "") {
+            return toast.error("Vui lòng nhập mật khẩu!")
+        }
+
+        setLoading(true);
         try {
             const data = await login(email, password);
             toast.success("Đăng nhập thành công!");
-            localStorage.setItem("token", data.token);
-            console.log(data)
+            // localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.data));
+            // console.log(data)
             navigate("/");
         } catch (err) {
             console.error(err);
 
-            if (email === "" && password === "") {
-                toast.error("Vui lòng nhập email và mật khẩu!");
-            } else if (email === "") {
-                toast.error("Vui lòng nhập email!")
-            } else if (password === "") {
-                toast.error("Vui lòng nhập mật khẩu!")
-            } else {
-                toast.error("Sai email hoặc mật khẩu!");
-            }
+            toast.error("Sai email hoặc mật khẩu!");
+
+        } finally {
+            setLoading(false);
         }
     }
+    // if(loading) return <Loading/>
 
     const handSubmitRegister = async (e) => {
+
         e.preventDefault();
         if (username === "") return toast.error("Username không được để trống!");
         if (username.length <= 1) return toast.error("Vui lòng nhập tên đầy đủ!");
-        if (email === "") return toast.error("Email không được để trống!");
+        // test email
+        if (email === "") {
+            toast.error("Email không được để trống!")
+        } else if (!email.endsWith("@gmail.com"))
+            return toast.error("Email không hợp lệ!");
+        //test password
         if (password === "") return toast.error("Mật khẩu không được để trống!");
+        if (password.length < 6 || password.length > 18) {
+            return toast.error("Mật khẩu phải từ 6 đến 18 ký tự!");
+        }
+        if (!/[A-Z]/.test(password)) {
+            return toast.error("Mật khẩu phải chứa ít nhất 1 chữ hoa (A-Z)!");
+        }
+        if (!/[a-z]/.test(password)) {
+            return toast.error("Mật khẩu phải chứa ít nhất 1 chữ thường (a-z)!");
+        }
+        if (!/[0-9]/.test(password)) {
+            return toast.error("Mật khẩu phải chứa ít nhất 1 chữ số (0-9)!");
+        }
+        if (!/[@$!%*?&]/.test(password)) {
+            return toast.error("Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (@, $, !, %, *, ?, &)");
+        }
         if (password.length <= 5) return toast.error("Mật khẩu của bạn quá non!");
         if (phone === "") return toast.error("Số điện thoại không được để trống!");
         if (location === "") return toast.error("Vị trí không được để trống!");
@@ -62,13 +93,16 @@ export const SignUp = ({ tologin, settologin }) => {
         if (sex === "") return toast.error("Giới tính không được để trống!");
         if (!clause) return toast.error("Vui lòng đồng ý điều khoản!");
 
+        setLoading(true);
         try {
             const res = await registerUser(username, email, password, phone, location, sex);
             toast.success("Đăng ký tài khoản thành công!");
             settologin(false);
 
         } catch (err) {
-            toast.error("Email của bạn không hợp lệ hoặc đã có người đăng ký!");
+            toast.error("Email của bạn đã có người đăng ký!");
+        } finally {
+            setLoading(false);
         }
 
     }
@@ -76,6 +110,7 @@ export const SignUp = ({ tologin, settologin }) => {
     return (
 
         <div className='relative w-screen h-screen flex overflow-hidden transition-all duration-500'>
+            {loading ? <Loading /> : ""}
             <div className={`signin absolute top-0 left-0 w-screen h-screen transition-all duration-500  ${tologin ? "flex z-[1]" : "flex translate-x-[0%] opacity-0 z-[-1]"}`}>
 
                 <div ref={anisignin.ref} className={`w-[50%] h-full px-[50px] mt-[90px] transition-all duration-1000 ${anisignin.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-[20%]"}`}>
@@ -141,7 +176,7 @@ export const SignUp = ({ tologin, settologin }) => {
 
                                 <div>
                                     <p className='font-["Poppins"] font-semibold text-sm text-[#00000062]'>Password</p>
-                                    <input type="text" name="" id="" placeholder='8 -> 15 ký tự, 1, P, @,...'
+                                    <input type="text" name="" id="" placeholder='6 -> 18 ký tự, 1, P, @,...'
                                         onChange={(e) => setPassword(e.target.value)}
                                         className={`mt-[0px] text-[16px] focus:outline-none placeholder:text-[14px] focus:placeholder-[#0000] focus:border-main border-b-[1px] border-[#0000002f] py-2 w-full ${password ? "border-main" : ""}`} />
                                 </div>
@@ -163,7 +198,6 @@ export const SignUp = ({ tologin, settologin }) => {
                             <a href="#" className='text-[14px] text-main'>Điều khoản?</a>
                         </div>
 
-                        {error && <p className="text-red-500">{error}</p>}
                         <div className='flex justify-between items-center'>
                             <button
                                 onClick={handSubmitRegister}
@@ -215,8 +249,6 @@ export const SignUp = ({ tologin, settologin }) => {
                             </div>
                             <a href="#" className='text-[14px] text-main'>Quên mật khẩu?</a>
                         </div>
-
-                        {error && <p className="text-red-500">{error}</p>}
 
                         <div className='flex justify-between items-center'>
                             <button className='bg-main text-white font-semibold px-10 py-2 rounded-[20px] mt-12 hover:bg-opacity-80 transition-all duration-300'
