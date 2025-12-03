@@ -12,12 +12,11 @@ import avt_man from "../G-Food-Images/avata_man.png"
 import avt_woman from '../G-Food-Images/woman.png'
 
 export const Navbar = ({ settologin }) => {
-
     const navigator = useNavigate();
     const handleLogout = async () => {
         Auth.logout();
         navigator("/");
-    }
+    };
 
     const [scrolled, setScrolled] = useState(false);
     // Search
@@ -188,7 +187,7 @@ export const Navbar = ({ settologin }) => {
                                         : "border-[#fff0]"
                                     }`}
                             >
-                                About
+                                About Us
                             </Link>
                         </li>
                         <li>
@@ -249,8 +248,8 @@ export const Navbar = ({ settologin }) => {
                         </li>
                     </ul>
                 </div>
-                <div className="search-container justify-end flex gap-6 items-center w-[30%]">
-                    <div className={`relative`}>
+                <div className="w-[30%] search-container justify-end right flex gap-6 items-center">
+                    <div className="relative">
                         {searchOpen ? (
                             //  ÁP DỤNG searchRef VÀO DIV CHỨA FORM TÌM KIẾM
                             <div className="relative" ref={searchRef}>
@@ -343,53 +342,81 @@ export const Navbar = ({ settologin }) => {
                     <div className="right flex justify-end gap-6 items-center">
                         {user ? (
                             <>
-                                <div className='group'>
-                                    <Link to="#" >
-                                        <div className="group-hover:opacity-0 transition-all duration-300 relative Logo_Acc bg-main h-[42px] w-[42px] rounded-[50%] flex items-center cursor-pointer">
-                                            <img class='absolute w-[95%] h-[95%] left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]' src={userInfor.sex === true ? avt_man : avt_woman} alt="" />
+                                <div className="group relative">
+                                    <div className="group-hover:opacity-0 transition-all duration-300 relative bg-main h-[42px] w-[42px] rounded-full cursor-pointer">
+                                        <img
+                                            className="absolute w-[95%] h-[95%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                                            src={userInfor.sex === true ? avt_man : avt_woman}
+                                            alt=""
+                                        />
+                                    </div>
 
-                                        </div>
+                                    {/* MENU TRƯỢT TỪ BÊN PHẢI */}
+                                    <div className="fixed transition-all duration-300 translate-x-full group-hover:translate-x-0 right-0 top-0 w-[220px] bg-[#ffffffec] h-full pt-8 text-center shadow-lg">
 
-                                    </Link>
-                                    <div className='fixed transition-all duration-300 translate-x-[100%] group-hover:translate-x-[0] right-0 top-0 w-[220px] bg-[#ffffffec] h-full pt-8 text-center'>
-                                        <div className=''>
-                                            <div className="transition-all duration-300 relative bg-main h-[45px] w-[45px] rounded-[50%] flex items-center cursor-pointer mt-2 left-[50%] translate-x-[-50%]">
-                                                <img class='absolute w-[95%] h-[95%] left-[50%] translate-x-[-50%] top-[50%] translate-y-[-50%]' src={userInfor.sex === true ? avt_man : avt_woman} alt="" />
+                                        {/* Avatar + tên */}
+                                        <div>
+                                            <div className="relative bg-main h-[45px] w-[45px] rounded-full mx-auto flex items-center justify-center">
+                                                <img
+                                                    className="absolute w-[95%] h-[95%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                                                    src={userInfor.sex === true ? avt_man : avt_woman}
+                                                    alt=""
+                                                />
                                             </div>
-
-                                            <h2 className='font-light text-[22px] font-["Dancing_Script"] text-xamden mt-[5px]'><span className=''>Hello, </span> {firstName}</h2>
+                                            <h2 className="font-light text-[22px] font-['Dancing_Script'] text-xamden mt-[5px]">
+                                                Hello, {firstName}
+                                            </h2>
                                         </div>
 
-                                        <div className='px-8 flex flex-col gap-1 mt-6 relative h-[100%]'>
-                                            {user?.Roles?.[0]?.rolename === "admin" &&
-                                                <div>
-                                                    <div className=''>
-                                                        <button className='hover:bg-main hover:text-white transition-all duration-300 rounded-lg text-[#000000c7] w-full flex justify-left items-center p-2 pl-4'>Dashboard<i class="fa-solid fa-bars-progress text-[13px] pl-[5px] pt-[2px]"></i></button>
-                                                    </div>
-                                                </div>
-                                            }
+                                        {/* Menu */}
+                                        <div className="px-8 mt-6 flex flex-col gap-2 text-left">
 
-                                            <Link to={"/inforuser"} className='mt-0'>
-                                                <button className='hover:bg-main hover:text-white transition-all duration-300 rounded-lg text-[#000000c7] w-full flex justify-left items-center p-2  pl-4'>Tài khoản<i class="fa-solid fa-user text-[13px] pl-[5px] pt-[2px]"></i></button>
+                                            {user?.Roles?.[0]?.rolename === "admin" && (
+                                                <Link to="/dashboard">
+                                                    <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                        Dashboard
+                                                        <i className="fa-solid fa-bars-progress text-[13px] pl-[5px]"></i>
+                                                    </button>
+                                                </Link>
+                                            )}
+
+                                            <Link to="/inforuser">
+                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                    Tài khoản
+                                                    <i className="fa-solid fa-user text-[13px] pl-[5px]"></i>
+                                                </button>
                                             </Link>
 
-                                            <div className='mt-0'>
-                                                <button className='hover:bg-main hover:text-white transition-all duration-300 rounded-lg text-[#000000c7] w-full flex justify-left items-center p-2 pl-4'>Đăng bài viết<i class="fa-solid fa-plus text-[13px] pl-[5px] pt-[2px]"></i></button>
-                                            </div>
+                                            <Link to="/add-product">
+                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                    Đăng bài viết
+                                                    <i className="fa-solid fa-plus text-[13px] pl-[5px]"></i>
+                                                </button>
+                                            </Link>
 
-                                            <div className='absolute bottom-[25%] left-0 w-full px-8'>
-                                                <button onClick={handleLogout} className='bg-red-500 hover:bg-red-400 hover:text-white transition-all duration-300 rounded-lg text-white w-full flex justify-center items-center p-2'>Đăng xuất<i class="fa-solid fa-arrow-right-from-bracket text-[13px] pl-[5px] pt-[2px]"></i></button>
-                                            </div>
+                                            {/* Đăng xuất */}
+                                            <button
+                                                onClick={handleLogout}
+                                                className="bg-red-500 hover:bg-red-400 text-white transition-all duration-300 rounded-lg w-full p-2 flex justify-center items-center mt-10"
+                                            >
+                                                Đăng xuất
+                                                <i className="fa-solid fa-arrow-right-from-bracket text-[13px] pl-[5px]"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </>
                         ) : (
+                            // user = null
                             <>
-                                <div className={` flex gap-2 font-[roboto] text-[14px]`}>
-                                    <Link to="/signup" onClick={() => settologin(true)} className={`whitespace-nowrap transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng ký</Link>
-                                    <p className={`transition-all duration-300 ${scrolled ? "text-[#00000050]" : "text-[#ffffff82]"}`}>|</p>
-                                    <Link to="/signup" onClick={() => settologin(false)} className={`whitespace-nowrap transition-all duration-300 ${scrolled ? "text-[#000000db] hover:text-[#0000008b]" : "text-white hover:text-[#ffffffa6]"}`}>Đăng nhập</Link>
+                                <div className="flex gap-2 text-[14px]">
+                                    <Link to="/signup" onClick={() => settologin(true)} className={`${scrolled ? "text-black" : "text-white"} hover:opacity-70`}>
+                                        Đăng ký
+                                    </Link>
+                                    <span className={`${scrolled ? "text-[#00000050]" : "text-white/60"}`}>|</span>
+                                    <Link to="/signup" onClick={() => settologin(false)} className={`${scrolled ? "text-black" : "text-white"} hover:opacity-70`}>
+                                        Đăng nhập
+                                    </Link>
                                 </div>
                             </>
                         )}
