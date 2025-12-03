@@ -356,9 +356,9 @@ export const Navbar = ({ settologin }) => {
 
                                         {/* Avatar + tên */}
                                         <div>
-                                            <div className="relative bg-main h-[45px] w-[45px] rounded-full mx-auto flex items-center justify-center">
+                                            <div className="relative h-[50px] w-[50px] rounded-full mx-auto">
                                                 <img
-                                                    className="absolute w-[95%] h-[95%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                                                    className="absolute w-[100%] h-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                                                     src={userInfor.sex === true ? avt_man : avt_woman}
                                                     alt=""
                                                 />
@@ -369,7 +369,7 @@ export const Navbar = ({ settologin }) => {
                                         </div>
 
                                         {/* Menu */}
-                                        <div className="px-8 mt-6 flex flex-col gap-2 text-left">
+                                        <div className="relative px-8 mt-6 flex flex-col gap-2 text-left h-full">
 
                                             {user?.Roles?.[0]?.rolename === "admin" && (
                                                 <Link to="/dashboard">
@@ -397,7 +397,7 @@ export const Navbar = ({ settologin }) => {
                                             {/* Đăng xuất */}
                                             <button
                                                 onClick={handleLogout}
-                                                className="bg-red-500 hover:bg-red-400 text-white transition-all duration-300 rounded-lg w-full p-2 flex justify-center items-center mt-10"
+                                                className="absolute bottom-[150px] left-1/2 -translate-x-1/2 bg-red-500 hover:bg-red-400 text-white transition-all duration-300 rounded-lg p-2 flex justify-center items-center mt-10 w-[160px] "
                                             >
                                                 Đăng xuất
                                                 <i className="fa-solid fa-arrow-right-from-bracket text-[13px] pl-[5px]"></i>
