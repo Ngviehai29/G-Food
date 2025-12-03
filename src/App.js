@@ -10,6 +10,7 @@ import { Blog } from './Pages/Blog';
 import { Toaster } from "sonner";
 // Phân Quyền
 import UserRoute from './Routes/UserRoute';
+import { Infor_User } from './Pages/Infor_User';
 // import AdminRoute from './Routes/AdminRoute';
 
 function App() {
@@ -31,7 +32,8 @@ function App() {
         <Route path='/signup' element={<SignUp tologin={tologin} settologin={settologin} />} />
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
-        <Route path='/blog' element={<UserRoute><Blog /></UserRoute>} />
+        <Route path='/blog' element={<Blog />} />
+        <Route path='/inforuser' element={<Infor_User/>}/>
 
       </Routes>
 

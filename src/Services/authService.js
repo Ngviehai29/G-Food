@@ -19,3 +19,17 @@ export const registerUser = async (username, email, password, phone, location, s
   });
   return res.data;
 };
+
+export const getUserById = async (id) => {
+  const res = await axios.get(`${API}/users/${id}`);
+  return res.data;
+};
+
+export const updateUser = async (id, data) => {
+  const res = await axios.put(`${API}/users/${id}`, data);
+  return res.data;
+};
+
+
+
+

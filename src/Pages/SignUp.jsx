@@ -57,7 +57,6 @@ export const SignUp = ({ tologin, settologin }) => {
             setLoading(false);
         }
     }
-    // if(loading) return <Loading/>
 
     const handSubmitRegister = async (e) => {
 
