@@ -343,9 +343,9 @@ export const Navbar = ({ settologin }) => {
                         {user ? (
                             <>
                                 <div className="group relative">
-                                    <div className="group-hover:opacity-0 transition-all duration-300 relative bg-main h-[42px] w-[42px] rounded-full cursor-pointer">
+                                    <div className="group-hover:opacity-0 transition-all duration-300 relative h-[42px] w-[42px] rounded-full cursor-pointer">
                                         <img
-                                            className="absolute w-[95%] h-[95%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+                                            className="absolute w-[100%] h-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                                             src={userInfor.sex === true ? avt_man : avt_woman}
                                             alt=""
                                         />
@@ -356,15 +356,15 @@ export const Navbar = ({ settologin }) => {
 
                                         {/* Avatar + tên */}
                                         <div>
-                                            <div className="relative h-[50px] w-[50px] rounded-full mx-auto">
+                                            <div className="relative h-[46px] w-[46px] rounded-full mx-auto">
                                                 <img
                                                     className="absolute w-[100%] h-[100%] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
                                                     src={userInfor.sex === true ? avt_man : avt_woman}
                                                     alt=""
                                                 />
                                             </div>
-                                            <h2 className="font-light text-[22px] font-['Dancing_Script'] text-xamden mt-[5px]">
-                                                Hello, {firstName}
+                                            <h2 className="font-light text-[18px] font-['Lora'] text-black/50 mt-[5px]">
+                                                Hi, {firstName}
                                             </h2>
                                         </div>
 
