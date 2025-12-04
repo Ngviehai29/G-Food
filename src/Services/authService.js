@@ -55,13 +55,16 @@ export const logout = () => {
 };
 
 export const getUserById = async (id) => {
-  const res = await axios.get(`${API}/users/${id}`);
-  return res.data;
+    const res = await axios.get(`${API}/users/${id}`);
+    return res.data;
 };
 
 export const updateUser = async (id, data) => {
-  const res = await axios.put(`${API}/users/${id}`, data);
-  return res.data;
+    const res = await axios.put(`${API}/users/${id}`, data, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
+
+    return res.data;
 };
 
 

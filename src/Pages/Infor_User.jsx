@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getUserById, updateUser } from '../Services/authService'
 import { Loading } from '../Components/Loading.jsx'
+import { toast } from 'sonner'
 
 export const Infor_User = () => {
     const id = JSON.parse(localStorage.getItem("user")).id;
@@ -11,7 +12,7 @@ export const Infor_User = () => {
     const [openModal, setOpenModal] = useState(false);
     const [form, setForm] = useState({
         username: "",
-        sex: true,
+        sex: "true",
         phone: "",
         email: "",
         location: ""
@@ -52,14 +53,15 @@ export const Infor_User = () => {
         try {
             setLoading(true);
             await updateUser(id, form);
-            alert("Cập nhật thành công!");
+            toast.success("Cập nhập thông tin thành công!");
 
             // Cập nhật lại thông tin hiển thị
             setUserInfor(form);
 
             setOpenModal(false);
         } catch (err) {
-            console.log("Lỗi cập nhật:", err);
+            // console.log("Lỗi cập nhật:", err);
+            toast.error("Cập nhập thông tin thất bại!");
         } finally {
             setLoading(false);
             setOpenModal(false);
@@ -126,15 +128,15 @@ export const Infor_User = () => {
             {/* ================== POPUP FORM ================== */}
             {openModal && (
                 <div className='fixed inset-0 bg-black/50 flex justify-center items-center z-50'>
-                    <div className='bg-white w-[400px] p-6 rounded-xl shadow-lg'>
-                        <h2 className='text-center font-bold text-[20px] mb-4'>Cập nhập thông tin</h2>
+                    <div className='bg-white w-[400px] p-10 rounded-xl shadow-lg'>
+                        <h2 className='text-center font-bold text-[20px] mb-6 text-main'>CẬP NHẬP THÔNG TIN</h2>
 
-                        <div className='flex flex-col gap-3'>
+                        <div className='flex flex-col gap-4'>
                             <input
                                 name="username"
                                 value={form.username}
                                 onChange={handleChange}
-                                className='border p-2 rounded'
+                                className='border p-2 rounded focus:border-main focus:outline-none'
                                 placeholder='Tên...'
                             />
 
@@ -142,10 +144,10 @@ export const Infor_User = () => {
                                 name="sex"
                                 value={form.sex ? "true" : "false"}
                                 onChange={(e) => setForm({ ...form, sex: e.target.value === "true" })}
-                                className='border p-2 rounded'
+                                className='border p-2 rounded focus:border-main focus:outline-none'
                             >
                                 <option value="true">Nam</option>
-                                <option value="false">Nữ</option>
+                                <option value="false">Nữ</option>   
                             </select>
 
 
@@ -153,7 +155,7 @@ export const Infor_User = () => {
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleChange}
-                                className='border p-2 rounded'
+                                className='border p-2 rounded focus:border-main focus:outline-none'
                                 placeholder='Số điện thoại'
                             />
 
@@ -161,7 +163,7 @@ export const Infor_User = () => {
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                className='border p-2 rounded'
+                                className='border p-2 rounded focus:border-main focus:outline-none'
                                 placeholder='Email'
                             />
 
@@ -169,7 +171,7 @@ export const Infor_User = () => {
                                 name="location"
                                 value={form.location}
                                 onChange={handleChange}
-                                className='border p-2 rounded'
+                                className='border p-2 rounded focus:border-main focus:outline-none'
                                 placeholder='Địa chỉ'
                             />
                         </div>
