@@ -8,11 +8,14 @@ export const QLyUser = () => {
     const [loading, setLoading] = useState(false);
 
     const fetchUser = async () => {
+        setLoading(true);
         try {
             const data = await getAllUser();
             setUsers(data.data);
         } catch (error) {
             console.log("error", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -47,7 +50,7 @@ export const QLyUser = () => {
 
     return (
         <div className=''>
-            <div className='w-full pl-2 h-screen'>
+            <div className='w-full pl-2'>
                 <div className='w-full bg-gray-50 rounded-[10px] border border-gray-100 shadow-xl'>
 
                     <div className='flex items-center w-full rounded-tl-[10px] bg-gradient-to-r from-[#4C7F31] to-[#4C7F31] rounded-tr-[10px] font-semibold text-[14px] pl-4 p-4 text-white relative'>
@@ -58,7 +61,7 @@ export const QLyUser = () => {
                             </div>
                         }
                     </div>
-                    <table className="w-full border mt-4">
+                    <table className="w-full border mt-0">
                         <thead>
                             <tr className="bg-gray-200">
                                 <th className="border p-2 w-[160px]">Họ và tên</th>

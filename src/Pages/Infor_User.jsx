@@ -10,6 +10,29 @@ export const Infor_User = () => {
     const [loading, setLoading] = useState(false);
 
     const [openModal, setOpenModal] = useState(false);
+
+    const validateForm = () => {
+        if (!form.username.trim())
+            return "Tên không được để trống!";
+
+        if (!form.phone.trim())
+            return "Số điện thoại không được để trống!";
+
+        if (!form.email.trim())
+            return "Email không được để trống!";
+
+        if (!form.location.trim())
+            return "Địa chỉ không được để trống!";
+
+        // regex kiểm tra email + phải có @gmail.com
+        const gmailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+        if (!gmailRegex.test(form.email))
+            return "Email phải đúng định dạng và có đuôi @gmail.com!";
+
+        return null;
+    };
+
+
     const [form, setForm] = useState({
         username: "",
         sex: "true",
@@ -20,7 +43,6 @@ export const Infor_User = () => {
 
     useEffect(() => {
         setLoading(true);
-
         const fetchUser = async () => {
             try {
                 const data = await getUserById(id);
@@ -50,6 +72,12 @@ export const Infor_User = () => {
     };
 
     const handleSubmit = async () => {
+
+        const error = validateForm();
+        if (error) {
+            toast.error(error);
+            return;
+        }
         try {
             setLoading(true);
             await updateUser(id, form);
@@ -127,8 +155,9 @@ export const Infor_User = () => {
 
             {/* ================== POPUP FORM ================== */}
             {openModal && (
-                <div className='fixed inset-0 bg-black/50 flex justify-center items-center z-50'>
-                    <div className='bg-white w-[400px] p-10 rounded-xl shadow-lg'>
+                <div className='fixed inset-0 flex justify-center items-center z-50'>
+                    <div onClick={() => setOpenModal(false)} className='w-full h-full bg-black/20 absolute top-0 left-0 z-10'></div>
+                    <div className='bg-white w-[400px] p-10 rounded-xl shadow-lg absolute z-20'>
                         <h2 className='text-center font-bold text-[20px] mb-6 text-main'>CẬP NHẬP THÔNG TIN</h2>
 
                         <div className='flex flex-col gap-4'>
@@ -136,7 +165,7 @@ export const Infor_User = () => {
                                 name="username"
                                 value={form.username}
                                 onChange={handleChange}
-                                className='border p-2 rounded focus:border-main focus:outline-none'
+                                className='border p-2 rounded-[10px] focus:border-main focus:outline-none'
                                 placeholder='Tên...'
                             />
 
@@ -144,10 +173,10 @@ export const Infor_User = () => {
                                 name="sex"
                                 value={form.sex ? "true" : "false"}
                                 onChange={(e) => setForm({ ...form, sex: e.target.value === "true" })}
-                                className='border p-2 rounded focus:border-main focus:outline-none'
+                                className='border p-2 rounded-[10px] focus:border-main focus:outline-none'
                             >
                                 <option value="true">Nam</option>
-                                <option value="false">Nữ</option>   
+                                <option value="false">Nữ</option>
                             </select>
 
 
@@ -155,7 +184,7 @@ export const Infor_User = () => {
                                 name="phone"
                                 value={form.phone}
                                 onChange={handleChange}
-                                className='border p-2 rounded focus:border-main focus:outline-none'
+                                className='border p-2 rounded-[10px] focus:border-main focus:outline-none'
                                 placeholder='Số điện thoại'
                             />
 
@@ -163,7 +192,7 @@ export const Infor_User = () => {
                                 name="email"
                                 value={form.email}
                                 onChange={handleChange}
-                                className='border p-2 rounded focus:border-main focus:outline-none'
+                                className='border p-2 rounded-[10px] focus:border-main focus:outline-none'
                                 placeholder='Email'
                             />
 
@@ -171,20 +200,20 @@ export const Infor_User = () => {
                                 name="location"
                                 value={form.location}
                                 onChange={handleChange}
-                                className='border p-2 rounded focus:border-main focus:outline-none'
+                                className='border p-2 rounded-[10px] focus:border-main focus:outline-none'
                                 placeholder='Địa chỉ'
                             />
                         </div>
 
-                        <div className='flex justify-between mt-6'>
+                        <div className='flex justify-center gap-4 mt-8'>
                             <button
-                                className='px-4 py-2 bg-zinc-300 rounded'
+                                className='px-4 py-2 bg-zinc-300 rounded-[10px]'
                                 onClick={() => setOpenModal(false)}
                             >
                                 Hủy
                             </button>
                             <button
-                                className='px-4 py-2 bg-main text-white rounded'
+                                className='px-4 py-2 bg-main text-white rounded-[10px]'
                                 onClick={handleSubmit}
                             >
                                 Lưu

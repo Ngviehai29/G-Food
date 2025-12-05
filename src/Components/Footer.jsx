@@ -40,11 +40,6 @@ export const Footer = () => {
                         </div>
                         <div className='w-8 h-[2px] bg-main my-6'></div>
                         <div className='flex flex-col gap-2 font-light'>
-                            <a className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
                             <a href='#' className='flex gap-1 items-center cursor-pointer'>
                                 <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
                                 <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
@@ -65,7 +60,12 @@ export const Footer = () => {
                                 <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
                             </a>
 
-                            <a className='flex gap-1 items-center cursor-pointer'>
+                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
+                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
+                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
+                            </a>
+
+                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
                                 <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
                                 <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
                             </a>

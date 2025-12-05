@@ -72,6 +72,7 @@ export const updateUser = async (id, data) => {
     return res.data;
 };
 
+// khóa tài khoản
 export const lockUser = async (id) => {
     const res = await axios.put(`${API}/users/lock/${id}`);
     return res.data;

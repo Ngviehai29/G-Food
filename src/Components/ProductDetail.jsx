@@ -47,7 +47,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                 </div>
 
                 {/* Product Details */}
-                <div className="p-5 overflow-y-auto max-h-[calc(90vh-12rem)]">
+                <div className="p-10 overflow-y-auto max-h-[calc(90vh-12rem)]">
                     {/* Location and Type - Side by side */}
                     <div className="flex items-center justify-between mb-6 bg-gray-50 rounded-xl p-4">
                         <div className="flex items-center gap-2">

@@ -23,7 +23,7 @@ export const Dashboard = () => {
     return (
         <div>
             <div className='w-full h-[78px] bg-[#0f3714]'></div>
-            <div className='w-[1150px] mx-auto h-screen my-8 flex '>
+            <div className='w-[1150px] mx-auto h-[600px] my-6 flex '>
                 <div className='w-[250px] h-full  bg-[#4C7F31] text-black py-[12px] rounded-[10px] shadow-xl'>
                     <div className='w-[226px] h-full bg-white mx-auto rounded-[25px] rounded-tr-[80px] rounded-bl-[80px] px-[20px]'>
                         <h1 className='font-bold text-[#4C7F31] text-[22px] pl-6 pt-8'>Dashboard</h1>
