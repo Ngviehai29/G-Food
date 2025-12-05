@@ -83,6 +83,11 @@ export const unlockUser = async (id) => {
     return res.data;
 };
 
+export const getCategory = async () => {
+    const res = await axios.get(`${API}/categories`);
+    return res.data;
+};
+
 
 
 

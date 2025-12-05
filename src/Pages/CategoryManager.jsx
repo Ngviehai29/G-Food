@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { getAllUser, lockUser, unlockUser } from '../Services/authService';
+import React from 'react'
+import { useEffect, useState } from 'react'
+import { getCategory, lockUser, unlockUser } from '../Services/authService';
 import { toast } from 'sonner'
 
-export const QLyUser = () => {
+export const CategoryManager = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
 
     const fetchUser = async () => {
         setLoading(true);
         try {
-            const data = await getAllUser();
+            const data = await getCategory();
             setUsers(data.data);
         } catch (error) {
             console.log("error", error);
@@ -55,7 +56,7 @@ export const QLyUser = () => {
                     <div className='flex items-center pt-2'>
                         <div className="mb-8">
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                                Quản lý người dùng
+                                Quản lý danh mục
                             </h1>
                             <p className="text-gray-600">
                                 Tất cả người dùng của hệ thống sẽ được hiển thị tại đây
@@ -67,40 +68,36 @@ export const QLyUser = () => {
                             </div>
                         }
                     </div>
-                    <table className="w-full border mt-0 ">
+                    <button className="bg-main text-white px-3 py-2 rounded">
+                        Thêm danh mục +
+                    </button>
+                    <table className="w-full border mt-4 ">
                         <thead>
                             <tr className="bg-[#4C7F31] text-white">
-                                <th className="border p-2 w-[160px]">Họ và tên</th>
-                                <th className="border p-2 ">Email</th>
-                                <th className="border p-2">Giới tính</th>
-                                <th className="border p-2 w-[270px]">Vị trí</th>
-                                <th className="border p-2">Hành động</th>
+                                <th className="border p-2 w-[160px]">Tên danh mục</th>
+                                <th className="border p-2 ">Mô tả</th>
+                                <th className="border p-2 ">Hành động</th>
+
                             </tr>
                         </thead>
-
                         <tbody>
                             {users.map((u) => (
                                 <tr key={u.id}>
-                                    <td className="border p-2">{u.username}</td>
-                                    <td className="border p-2">{u.email}</td>
-                                    <td className="border p-2">{u.sex ? "Nam" : "Nữ"}</td>
-                                    <td className="border p-2">{u.location}</td>
-                                    <td className="border p-2 text-center">
-                                        {u.status ? (
-                                            <button
-                                                onClick={() => handleToggleStatus(u.id, true)}
-                                                className="bg-red-500 text-white px-3 py-1 rounded"
-                                            >
-                                                Khóa
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => handleToggleStatus(u.id, false)}
-                                                className="bg-green-500 text-white px-3 py-1 rounded"
-                                            >
-                                                Mở khóa
-                                            </button>
-                                        )}
+                                    <td className="border p-2">{u.name}</td>
+                                    <td className="border p-2">{u.description}</td>
+                                    <td className="border p-2 text-center flex gap-4 justify-center">
+                                        <button
+                                            onClick={() => handleToggleStatus(u.id, true)}
+                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Sửa
+                                        </button>
+                                        <button
+                                            onClick={() => handleToggleStatus(u.id, false)}
+                                            className="bg-red-500 text-white px-3 py-1 rounded"
+                                        >
+                                            Xóa
+                                        </button>
                                     </td>
                                 </tr>
                             ))}
@@ -110,4 +107,4 @@ export const QLyUser = () => {
             </div>
         </div>
     );
-};
+}

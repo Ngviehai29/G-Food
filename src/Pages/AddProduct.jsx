@@ -1,13 +1,14 @@
 // AddProductFixed.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserId } from "../Services/authService";
-import bgImage from "../G-Food-Images/AddProduct.jpg"; // Đường dẫn tương đối
+import bgImage from "../G-Food-Images/AddProduct.jpg";
 
 const API = process.env.REACT_APP_API_URL;
 
 const AddProductFixed = () => {
     const navigate = useNavigate();
+    const isMounted = useRef(true); // Sử dụng useRef thay vì useState
 
     // State cực kỳ đơn giản
     const [form, setForm] = useState({
@@ -20,8 +21,16 @@ const AddProductFixed = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [formErrors, setFormErrors] = useState({}); // Thêm state cho lỗi
 
     const userId = getCurrentUserId();
+
+    // Cleanup effect - chỉ set ref
+    useEffect(() => {
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     // Redirect nếu chưa login
     useEffect(() => {
@@ -60,9 +69,14 @@ const AddProductFixed = () => {
         loadCategories();
     }, [userId]);
 
+    // Xóa tất cả điều kiện mounted từ các hàm xử lý input
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
+        // Xóa lỗi khi người dùng bắt đầu nhập
+        if (formErrors[name]) {
+            setFormErrors((prev) => ({ ...prev, [name]: "" }));
+        }
     };
 
     const handleImageChange = (e) => {
@@ -75,6 +89,32 @@ const AddProductFixed = () => {
         }
 
         setForm((prev) => ({ ...prev, image: file }));
+        if (formErrors.image) {
+            setFormErrors((prev) => ({ ...prev, image: "" }));
+        }
+    };
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!form.name.trim()) {
+            errors.name = "Vui lòng nhập tên sản phẩm";
+        }
+
+        if (!form.categoryid) {
+            errors.categoryid = "Vui lòng chọn loại thực phẩm";
+        }
+
+        if (!form.content.trim()) {
+            errors.content = "Vui lòng nhập nội dung";
+        }
+
+        if (!form.image) {
+            errors.image = "Vui lòng chọn hình ảnh";
+        }
+
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     const handleSubmit = async (e) => {
@@ -82,9 +122,9 @@ const AddProductFixed = () => {
 
         if (submitting) return;
 
-        // Validation
-        if (!form.name || !form.categoryid || !form.content || !form.image) {
-            alert("Vui lòng điền đầy đủ thông tin");
+        // Validation với hiển thị lỗi
+        if (!validateForm()) {
+            alert("Vui lòng điền đầy đủ thông tin được đánh dấu *");
             return;
         }
 
@@ -109,6 +149,7 @@ const AddProductFixed = () => {
 
             if (result.success) {
                 alert(result.message || "Thành công!");
+
                 // Reset form
                 setForm({
                     name: "",
@@ -116,7 +157,9 @@ const AddProductFixed = () => {
                     content: "",
                     image: null,
                 });
-                // Navigate - sử dụng navigate thay vì window.location
+                setFormErrors({});
+
+                // Điều hướng đơn giản
                 navigate("/");
             } else {
                 alert(result.message || "Có lỗi xảy ra");
@@ -125,11 +168,12 @@ const AddProductFixed = () => {
             console.error("Submit error:", error);
             alert("Lỗi kết nối: " + error.message);
         } finally {
-            setSubmitting(false);
+            if (isMounted.current) {
+                setSubmitting(false);
+            }
         }
     };
 
-    // Sử dụng giao diện đẹp hơn với Tailwind và background hình ảnh
     return (
         <div
             className="min-h-screen py-8 px-4"
@@ -149,40 +193,6 @@ const AddProductFixed = () => {
                     <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
                         Đăng Bài Sản Phẩm Mới
                     </h1>
-
-                    {/* {userId && (
-                        <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <p className="text-sm text-green-700">
-                                👤 Đang đăng nhập với ID:{" "}
-                                <strong>{userId}</strong>
-                            </p>
-                        </div>
-                    )} */}
-
-                    {/* Categories Info */}
-                    {/* {categories.length > 0 && (
-                        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <p className="text-sm text-blue-700 mb-2">
-                                📋 Có <strong>{categories.length}</strong> loại
-                                thực phẩm
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                                {categories.map((cat) => (
-                                    <span
-                                        key={cat.id}
-                                        className={`px-3 py-1 text-xs rounded-full ${
-                                            cat.id === form.categoryid
-                                                ? "bg-blue-100 text-blue-700 border border-blue-300"
-                                                : "bg-gray-100 text-gray-600"
-                                        }`}
-                                    >
-                                        {cat.name}
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-                    )} */}
-
                     <form onSubmit={handleSubmit}>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {/* Left Column */}
@@ -197,12 +207,19 @@ const AddProductFixed = () => {
                                         value={form.name}
                                         onChange={handleChange}
                                         placeholder="Ví dụ: Rau cải, Chuối, Thịt bò..."
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none ${
+                                            formErrors.name
+                                                ? "border-red-500"
+                                                : "border-gray-300"
+                                        }`}
                                         disabled={submitting}
-                                        required
                                     />
+                                    {formErrors.name && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {formErrors.name}
+                                        </p>
+                                    )}
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Loại Thực Phẩm *
@@ -211,9 +228,12 @@ const AddProductFixed = () => {
                                         name="categoryid"
                                         value={form.categoryid}
                                         onChange={handleChange}
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none ${
+                                            formErrors.categoryid
+                                                ? "border-red-500"
+                                                : "border-gray-300"
+                                        }`}
                                         disabled={loading || submitting}
-                                        required
                                     >
                                         {loading ? (
                                             <option value="">
@@ -239,8 +259,12 @@ const AddProductFixed = () => {
                                             </>
                                         )}
                                     </select>
+                                    {formErrors.categoryid && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {formErrors.categoryid}
+                                        </p>
+                                    )}
                                 </div>
-
                                 <div>
                                     <label className="block text-sm font-medium text-gray-700 mb-2">
                                         Nội dung chia sẻ *
@@ -251,19 +275,32 @@ const AddProductFixed = () => {
                                         onChange={handleChange}
                                         placeholder="Mô tả chi tiết về sản phẩm, số lượng, chất lượng, cách liên hệ..."
                                         rows="5"
-                                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none resize-none"
+                                        className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none resize-none ${
+                                            formErrors.content
+                                                ? "border-red-500"
+                                                : "border-gray-300"
+                                        }`}
                                         disabled={submitting}
-                                        required
                                     />
+                                    {formErrors.content && (
+                                        <p className="mt-1 text-sm text-red-500">
+                                            {formErrors.content}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
-
                             {/* Right Column - Image Upload */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-2">
                                     Hình Ảnh Sản Phẩm *
                                 </label>
-                                <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 bg-gray-50">
+                                <div
+                                    className={`border-2 border-dashed rounded-xl p-6 bg-gray-50 ${
+                                        formErrors.image
+                                            ? "border-red-500 bg-red-50"
+                                            : "border-gray-300"
+                                    }`}
+                                >
                                     <input
                                         type="file"
                                         id="imageUpload"
@@ -271,23 +308,21 @@ const AddProductFixed = () => {
                                         accept="image/*"
                                         onChange={handleImageChange}
                                         disabled={submitting}
-                                        required
                                     />
                                     <label
                                         htmlFor="imageUpload"
-                                        className={`inline-flex items-center justify-center px-6 py-3 rounded-lg shadow transition cursor-pointer ${
-                                            submitting ? "opacity-50" : ""
+                                        className={`inline-flex items-center justify-center px-6 py-3 rounded-lg shadow transition ${
+                                            submitting
+                                                ? "opacity-50 cursor-not-allowed"
+                                                : "cursor-pointer hover:opacity-90"
                                         }`}
                                         style={{
-                                            backgroundColor: submitting
-                                                ? "#ccc"
-                                                : "#97b545",
+                                            backgroundColor: "#97b545",
                                             color: "white",
                                         }}
                                     >
                                         📁 Chọn Ảnh Sản Phẩm
                                     </label>
-
                                     {form.image && (
                                         <div className="mt-4 p-3 bg-gray-100 rounded-lg">
                                             <p className="text-sm font-medium">
@@ -304,29 +339,31 @@ const AddProductFixed = () => {
                                             </p>
                                         </div>
                                     )}
-
                                     <p className="mt-4 text-xs text-gray-500">
                                         {form.image
                                             ? "✅ Đã chọn ảnh"
                                             : "Chưa có ảnh nào được chọn"}
                                     </p>
+
+                                    {formErrors.image && (
+                                        <p className="mt-2 text-sm text-red-500">
+                                            {formErrors.image}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                         </div>
-
                         {/* Submit Buttons */}
                         <div className="flex justify-center gap-6 mt-10 pt-6 border-t">
                             <button
                                 type="submit"
-                                className={`px-10 py-3 text-white text-lg font-bold rounded-full shadow-xl transition flex items-center justify-center gap-2 ${
-                                    submitting
+                                className={`px-10 py-3 text-white text-lg font-bold rounded-full shadow-xl transition flex items-center justify-center gap-2 min-w-[120px] ${
+                                    submitting || !userId
                                         ? "opacity-50 cursor-not-allowed"
-                                        : ""
+                                        : "hover:opacity-90"
                                 }`}
                                 style={{
-                                    backgroundColor: submitting
-                                        ? "#ccc"
-                                        : "#97b545",
+                                    backgroundColor: "#97b545",
                                 }}
                                 disabled={submitting || !userId}
                             >
@@ -339,11 +376,10 @@ const AddProductFixed = () => {
                                     "Đăng Bài"
                                 )}
                             </button>
-
                             <button
                                 type="button"
                                 onClick={() => navigate(-1)}
-                                className="px-10 py-3 text-gray-700 text-lg font-bold rounded-full border border-gray-300 hover:bg-gray-50 transition"
+                                className="px-10 py-3 text-gray-700 text-lg font-bold rounded-full border border-gray-300 hover:bg-gray-50 transition min-w-[120px]"
                                 disabled={submitting}
                             >
                                 Hủy
