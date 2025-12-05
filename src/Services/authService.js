@@ -59,6 +59,11 @@ export const getUserById = async (id) => {
     return res.data;
 };
 
+export const getAllUser = async () => {
+    const res = await axios.get(`${API}/users`);
+    return res.data;
+};
+
 export const updateUser = async (id, data) => {
     const res = await axios.put(`${API}/users/${id}`, data, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
@@ -66,6 +71,17 @@ export const updateUser = async (id, data) => {
 
     return res.data;
 };
+
+export const lockUser = async (id) => {
+    const res = await axios.put(`${API}/users/lock/${id}`);
+    return res.data;
+};
+
+export const unlockUser = async (id) => {
+    const res = await axios.put(`${API}/users/unlock/${id}`);
+    return res.data;
+};
+
 
 
 

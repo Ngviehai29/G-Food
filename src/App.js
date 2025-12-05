@@ -12,7 +12,9 @@ import { Toaster } from "sonner";
 import { Infor_User } from './Pages/Infor_User';
 import UserRoute from "./Routes/UserRoute";
 import AddProduct from "./Pages/AddProduct";
-// import AdminRoute from './Routes/AdminRoute';
+import { Dashboard } from "./Pages/Dashboard";
+import AdminRoute from './Routes/AdminRoute';
+import { QLyUser } from "./Pages/QLyUser";
 
 function App() {
     const location = useLocation();
@@ -38,7 +40,11 @@ function App() {
                     <Route path='/blog' element={<Blog />} />
                     <Route path='/inforuser' element={<Infor_User />} />
                     <Route path="/add-product" element={<AddProduct />} />
+                    <Route path="/dashboard" element={<AdminRoute><Dashboard /></AdminRoute>}>
+                        <Route path="/dashboard/qluser" element={<QLyUser />} />
+                    </Route>
                 </Routes>
+
 
                 {location.pathname !== "/signup" && <Footer />}
             </div>

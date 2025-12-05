@@ -5,7 +5,7 @@ const AdminRoute = ({ children }) => {
     const user = Auth.getUser();
 
     if (!user) return <Navigate to="/signup" />;
-    if (user.role !== "admin") return <Navigate to="/not-found" />;
+    if (user.Roles[0].rolename !== "admin") return <Navigate to="/not-found" />;
 
     return children;
 };
