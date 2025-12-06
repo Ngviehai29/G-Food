@@ -387,27 +387,6 @@ const ProductManagement = () => {
                             <option value="inactive">Đã ẩn</option>
                         </select>
                     </div>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-2">
-                        <button
-                            onClick={fetchProducts}
-                            className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition flex items-center gap-2"
-                        >
-                            <RefreshCw className="w-4 h-4" />
-                            Làm mới
-                        </button>
-                        <button
-                            onClick={() =>
-                                (window.location.href = "/add-product")
-                            }
-                            className="px-4 py-3 text-white rounded-lg hover:opacity-90 transition flex items-center gap-2"
-                            style={{ backgroundColor: PRIMARY_COLOR }}
-                        >
-                            <Plus className="w-4 h-4" />
-                            Thêm mới
-                        </button>
-                    </div>
                 </div>
             </div>
 
@@ -549,11 +528,12 @@ const ProductManagement = () => {
                                                                 : "active"
                                                         )
                                                     }
-                                                    className={`px-3 py-1 rounded-full text-sm font-medium transition ${product.status ===
-                                                            "active"
+                                                    className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+                                                        product.status ===
+                                                        "active"
                                                             ? "bg-green-100 text-green-800 hover:bg-green-200"
                                                             : "bg-red-100 text-red-800 hover:bg-red-200"
-                                                        }`}
+                                                    }`}
                                                 >
                                                     {product.status === "active"
                                                         ? "Đang hiển thị"
@@ -615,10 +595,11 @@ const ProductManagement = () => {
                                             )
                                         }
                                         disabled={currentPage === 1}
-                                        className={`p-2 rounded-lg ${currentPage === 1
+                                        className={`p-2 rounded-lg ${
+                                            currentPage === 1
                                                 ? "text-gray-400 cursor-not-allowed"
                                                 : "text-gray-600 hover:bg-gray-100"
-                                            }`}
+                                        }`}
                                     >
                                         <ChevronLeft className="w-5 h-5" />
                                     </button>
@@ -642,11 +623,12 @@ const ProductManagement = () => {
                                                                 pageNum
                                                             )
                                                         }
-                                                        className={`w-8 h-8 rounded-lg flex items-center justify-center ${currentPage ===
-                                                                pageNum
+                                                        className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                                                            currentPage ===
+                                                            pageNum
                                                                 ? "bg-green-500 text-white"
                                                                 : "text-gray-600 hover:bg-gray-100"
-                                                            }`}
+                                                        }`}
                                                     >
                                                         {pageNum}
                                                     </button>
@@ -662,10 +644,11 @@ const ProductManagement = () => {
                                             )
                                         }
                                         disabled={currentPage === totalPages}
-                                        className={`p-2 rounded-lg ${currentPage === totalPages
+                                        className={`p-2 rounded-lg ${
+                                            currentPage === totalPages
                                                 ? "text-gray-400 cursor-not-allowed"
                                                 : "text-gray-600 hover:bg-gray-100"
-                                            }`}
+                                        }`}
                                     >
                                         <ChevronRight className="w-5 h-5" />
                                     </button>
@@ -735,14 +718,15 @@ const ProductManagement = () => {
                                                 Trạng thái
                                             </label>
                                             <p
-                                                className={`font-medium ${selectedProduct.status ===
-                                                        "active"
+                                                className={`font-medium ${
+                                                    selectedProduct.status ===
+                                                    "active"
                                                         ? "text-green-600"
                                                         : "text-red-600"
-                                                    }`}
+                                                }`}
                                             >
                                                 {selectedProduct.status ===
-                                                    "active"
+                                                "active"
                                                     ? "Đang hiển thị"
                                                     : "Đã ẩn"}
                                             </p>
