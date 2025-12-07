@@ -23,34 +23,6 @@ export const Card_Product = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(6); // 6 items mỗi trang
 
-    // Thông tin chi tiết cho từng sản phẩm - GIỮ NGUYÊN
-    // const productDetails = {
-    //     "Gạo GT25": {
-    //         type: "Lương thực",
-    //         description:
-    //             "Gạo GT25 thơm ngon, chất lượng cao, gạo mới thu hoạch đảm bảo an toàn vệ sinh thực phẩm. Phù hợp cho các bữa ăn gia đình và hoạt động từ thiện.",
-    //         contact: "Nguyễn Văn A - 0901 234 567",
-    //     },
-    //     "Thịt Heo": {
-    //         type: "Thực phẩm tươi",
-    //         description:
-    //             "Thịt heo tươi ngon, đảm bảo chất lượng, nguồn gốc rõ ràng. Đã qua kiểm dịch và chế biến hợp vệ sinh. Thịt được bảo quản lạnh đúng tiêu chuẩn.",
-    //         contact: "Trần Thị B - 0902 345 678",
-    //     },
-    //     "Mỳ Tôm": {
-    //         type: "Đồ khô",
-    //         description:
-    //             "Mỳ tôm các loại, đa dạng hương vị, hạn sử dụng còn dài. Đóng gói nguyên bao bì, phù hợp cho các chương trình từ thiện và dự trữ.",
-    //         contact: "Lê Văn C - 0903 456 789",
-    //     },
-    //     "Rau Muống": {
-    //         type: "Rau xanh",
-    //         description:
-    //             "Rau muống tươi xanh, sạch sẽ, trồng theo phương pháp hữu cơ. Không sử dụng thuốc trừ sâu, thu hoạch trong ngày, đảm bảo tươi ngon.",
-    //         contact: "Phạm Thị D - 0904 567 890",
-    //     },
-    // };
-
     // Lấy dữ liệu từ API khi component mount
     useEffect(() => {
         fetchProductsFromAPI();
