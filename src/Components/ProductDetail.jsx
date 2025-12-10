@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, MapPin, User, Phone, Package, Info, Loader2 } from "lucide-react";
+// Bỏ import Link nếu không cần chuyển hướng ngay sau khi nhấn
+// import { Link } from "react-router-dom"; 
 
 const PRIMARY_COLOR = "#97b545";
 const HOVER_COLOR = "#7d9931";
@@ -8,6 +10,9 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
     const [productDetail, setProductDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    
+    // ✨ STATE MỚI: Quản lý trạng thái yêu cầu
+    const [requestStatus, setRequestStatus] = useState("default"); // 'default', 'pending', 'success', 'error'
 
     // Gọi API khi component mount hoặc product thay đổi
     useEffect(() => {
@@ -22,7 +27,6 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
             setError(null);
 
             // Gọi API chi tiết sản phẩm
-            // Nếu API không có endpoint riêng, dùng API list và filter
             const response = await fetch(
                 `https://be-g-food.onrender.com/api/postnewshare/`
             );
@@ -44,11 +48,8 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                     const formattedDetail = {
                         id: foundProduct.id,
                         name: foundProduct.name,
-                        // CHÚ Ý: API trả về "Post_image" (không có 's')
                         images: foundProduct.Post_image || [],
-                        // Category viết thường "category"
                         type: foundProduct.category?.name || "Thực phẩm",
-                        // User viết hoa "User"
                         user: foundProduct.User || {},
                         location:
                             foundProduct.User?.location || "Chưa có địa điểm",
@@ -59,18 +60,37 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
 
                     setProductDetail(formattedDetail);
                 } else {
-                    // Fallback nếu không tìm thấy trong API
                     setProductDetail(getProductDetail(product));
                 }
             }
         } catch (error) {
             console.error("Error fetching product detail:", error);
             setError("Không thể tải chi tiết sản phẩm");
-            // Fallback sử dụng hàm getProductDetail cũ
             setProductDetail(getProductDetail(product));
         } finally {
             setLoading(false);
         }
+    };
+    
+    // ✨ HÀM XỬ LÝ KHI NHẤN NÚT "NHẬN SẢN PHẨM"
+    const handleReceiveProduct = () => {
+        // Chuyển trạng thái sang "pending" ngay lập tức
+        setRequestStatus("pending");
+
+        // Mô phỏng việc gửi yêu cầu tới API
+        // Nếu bạn có API gửi yêu cầu thực tế, hãy đặt nó ở đây
+        // Ví dụ: await sendRequestApi(product.id);
+        
+        // Giả lập thời gian xử lý để nút hiển thị "Chờ duyệt"
+        setTimeout(() => {
+            // Sau khi API xử lý xong (thành công hoặc thất bại)
+            // Bạn có thể chuyển trạng thái (ví dụ: setRequestStatus("success") 
+            // và hiển thị thông báo, hoặc giữ nguyên 'pending' nếu yêu cầu cần duyệt thủ công).
+            // setRequestStatus("success"); 
+        }, 1500);
+        
+        // Nếu bạn muốn chuyển hướng sang trang nhận sản phẩm sau khi nhấn:
+        // window.location.href = "/receiveproduct"; 
     };
 
     if (!product) return null;
@@ -79,6 +99,10 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
     const detail = productDetail || getProductDetail(product);
     const displayImages = productDetail?.images ||
         product.images || [{ image: product.img }];
+
+    // Định nghĩa styles cho nút "Chờ duyệt"
+    const isPending = requestStatus === "pending";
+    const pendingBgColor = "#9ca3af"; // Màu xám cho trạng thái chờ
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -99,7 +123,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                     <X className="w-5 h-5" />
                 </button>
 
-                {/* Loading */}
+                {/* Loading API */}
                 {loading && (
                     <div className="absolute inset-0 bg-white/80 backdrop-blur-sm z-20 flex items-center justify-center">
                         <div className="text-center">
@@ -211,47 +235,52 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                         </div>
                     </div>
 
-                    {/* API Info (chỉ hiển thị khi debug) */}
-                    {/* {process.env.NODE_ENV === "development" &&
-                        productDetail && (
-                            <div className="mt-4 p-3 bg-gray-100 rounded-lg">
-                                <p className="text-xs text-gray-500 mb-1">
-                                    API Data:
-                                </p>
-                                <pre className="text-xs text-gray-600 overflow-auto">
-                                    {JSON.stringify(productDetail, null, 2)}
-                                </pre>
-                            </div>
-                        )} */}
-
                     {/* Action Buttons */}
                     <div className="flex gap-3 pt-4 border-t">
+                        {/* Nút Đóng */}
                         <button
                             onClick={onClose}
                             className="px-5 py-3 text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition duration-300 flex-1"
                         >
                             Đóng
                         </button>
+                        
+                        {/* ✨ Nút NHẬN SẢN PHẨM/CHỜ DUYỆT ĐÃ ĐƯỢC CẬP NHẬT */}
                         <button
-                            className="px-5 py-3 text-white font-bold rounded-lg transition duration-300 shadow-lg flex-1 hover:shadow-xl active:scale-95"
+                            onClick={isPending ? undefined : handleReceiveProduct}
+                            disabled={isPending}
+                            className={`px-5 py-3 text-white font-bold rounded-lg transition duration-300 shadow-lg flex-1 active:scale-95 flex items-center justify-center
+                                ${isPending ? 'cursor-not-allowed' : 'hover:shadow-xl'}`}
                             style={{
-                                backgroundColor: PRIMARY_COLOR,
-                                background: `linear-gradient(135deg, ${PRIMARY_COLOR}, ${HOVER_COLOR})`,
-                                boxShadow:
-                                    "0 4px 12px rgba(151, 181, 69, 0.25)",
+                                // Thay đổi màu nền dựa trên trạng thái
+                                backgroundColor: isPending ? pendingBgColor : PRIMARY_COLOR,
+                                background: isPending 
+                                    ? `linear-gradient(135deg, ${pendingBgColor}, #b2b2b2)` 
+                                    : `linear-gradient(135deg, ${PRIMARY_COLOR}, ${HOVER_COLOR})`,
+                                boxShadow: isPending 
+                                    ? "none" 
+                                    : "0 4px 12px rgba(151, 181, 69, 0.25)",
                             }}
                             onMouseOver={(e) => {
-                                e.currentTarget.style.opacity = "0.9";
-                                e.currentTarget.style.transform =
-                                    "translateY(-1px)";
+                                if (!isPending) {
+                                    e.currentTarget.style.opacity = "0.9";
+                                    e.currentTarget.style.transform = "translateY(-1px)";
+                                }
                             }}
                             onMouseOut={(e) => {
-                                e.currentTarget.style.opacity = "1";
-                                e.currentTarget.style.transform =
-                                    "translateY(0)";
+                                if (!isPending) {
+                                    e.currentTarget.style.opacity = "1";
+                                    e.currentTarget.style.transform = "translateY(0)";
+                                }
                             }}
                         >
-                            Nhận sản phẩm
+                            {isPending ? (
+                                
+                                    "Chờ duyệt"
+                                
+                            ) : (
+                                "Nhận sản phẩm"
+                            )}
                         </button>
                     </div>
                 </div>

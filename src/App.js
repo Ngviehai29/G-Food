@@ -18,6 +18,11 @@ import { QLyUser } from "./Pages/QLyUser";
 import ProductManagement from "./Pages/ProductManagement";
 import StatisticsManagement from "./Pages/StatisticsManagement";
 import { CategoryManager } from "./Pages/CategoryManager";
+import Browseproducts from "./Pages/Browseproducts";
+import HistoryReceiveProduct from "./Pages/HistoryReceiveProduct";
+import SharerProducts from "./Pages/SharerProducts";
+import ReceiveProductPage from "./Pages/ReceiveProductPage";
+
 
 function App() {
     const location = useLocation();
@@ -47,6 +52,13 @@ function App() {
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/inforuser" element={<Infor_User />} />
                     <Route path="/add-product" element={<AddProduct />} />
+                    <Route path="/manage-requests" element={<SharerProducts />} />
+                    <Route path="/receive-products" element={<ReceiveProductPage />} />
+                    <Route path="/manage-requests/:productId" element={<Browseproducts />} />
+                    <Route path="/history-received" element={<HistoryReceiveProduct />
+                           
+                        }
+                    />
                     <Route
                         path="/dashboard"
                         element={

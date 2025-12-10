@@ -393,7 +393,26 @@ export const Navbar = ({ settologin }) => {
                                                     <i className="fa-solid fa-plus text-[13px] pl-[5px]"></i>
                                                 </button>
                                             </Link>
-
+                                            {/* DUYỆT SẢN PHẨM */}
+                                            <Link to="/manage-requests">
+                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                    Duyệt Sản Phẩm
+                                                    <i className="fa-solid fa-check-to-slot text-[12px] pl-[5px]"></i>
+                                                </button>
+                                            </Link>
+                                            {/*Lịch Sử Nhận*/}
+                                            <Link to="/history-received">
+                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                    Lịch sử Nhận
+                                                    <i className="fa-solid fa-clock-rotate-left text-[5x] pl-[3px]"></i>
+                                                </button>
+                                            </Link>
+                                            <Link to="/receive-products">
+                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                    Đã duyệt 
+                                                    <i className="fa-solid fa-box text-[13px] pl-[3px]"></i>
+                                                </button>
+                                            </Link>
                                             {/* Đăng xuất */}
                                             <button
                                                 onClick={handleLogout}
