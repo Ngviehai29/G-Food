@@ -75,9 +75,8 @@ export const Home = () => {
                     src={slogan}
                     alt=""
                     ref={ref}
-                    className={`slogan absolute top-[50%] left-[50%] w-[1000px] translate-y-[-42%] translate-x-[-25%] z-[2] brightness-[125%] duration-[1s] transition-all ${
-                        visible ? "opacity-100" : "opacity-0"
-                    }`}
+                    className={`slogan absolute top-[50%] left-[50%] w-[1000px] translate-y-[-42%] translate-x-[-25%] z-[2] brightness-[125%] duration-[1s] transition-all ${visible ? "opacity-100" : "opacity-0"
+                        }`}
                 />
 
                 <div className="flex absolute bottom-[-1px] h-[12px]">
@@ -91,11 +90,10 @@ export const Home = () => {
                 </div>
                 <div
                     ref={ref}
-                    className={`transition-all duration-[1s] content absolute z-[3] top-[50%] left-[50%] translate-x-[-105%] ${
-                        visible
+                    className={`transition-all duration-[1s] content absolute z-[3] top-[50%] left-[50%] translate-x-[-105%] ${visible
                             ? "opacity-100 translate-y-[-50%]"
                             : "opacity-0 translate-y-[-20%]"
-                    }`}
+                        }`}
                 >
                     {/* <div className="content absolute top-[50%] left-[35%] translate-x-[-50%] translate-y-[-50%]"> */}
                     <h1 className="text-[48px] text-white font-bold">
@@ -131,13 +129,8 @@ export const Home = () => {
             {/* filter */}
             <div></div>
 
-            {/* Blog */}
-            <div className="-mt-8">
-                <Card_Blog_Slide />
-            </div>
-
             {/* List Product */}
-            <div className="bg-[#F2F4F7]">
+            <div className="bg-white">
                 <h1 className="text-center text-[40px] font-[roboto] font-bold pt-8">
                     <span className="text-main">Our</span> Products
                 </h1>
@@ -146,9 +139,14 @@ export const Home = () => {
                     Chia sẻ sản phẩm để cùng lan tỏa những giá trị nhỏ bé nhưng
                     đầy ý nghĩa cho cộng đồng.
                 </p>
-                <div className="bg-[#F2F4F7] m-auto w-[1150px] h-[1000px]">
+                <div className="bg-white m-auto w-[1150px] h-[800px]">
                     <Card_Product />
                 </div>
+            </div>
+
+            {/* Blog */}
+            <div className="mt-8 bg-[#F2F4F7] py-4">
+                <Card_Blog_Slide />
             </div>
         </div>
     );

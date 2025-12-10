@@ -53,9 +53,17 @@ function App() {
                             <AdminRoute>
                                 <Dashboard />
                             </AdminRoute>}>
+                        <Route path="" element={<div className="mb-8 text-center mt-10">
+                            <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
+                                TRANG QUẢN LÝ HỆ THỐNG
+                            </h1>
+                            <p className="text-gray-600">
+                                Bắt đầu bằng cách chọn một mục quản lý
+                            </p>
+                        </div>} />
                         <Route path="qluser" element={<QLyUser />} />
                         <Route path="category" element={<CategoryManager />} />
-                        <Route path="products" element={<ProductManagement />}/>
+                        <Route path="products" element={<ProductManagement />} />
                         <Route path="statistics" element={<StatisticsManagement />} />
                     </Route>
                 </Routes>

@@ -375,6 +375,7 @@ export const Navbar = ({ settologin }) => {
                                 Service
                             </Link>
                         </li> */}
+                        
                         <li>
                             <Link
                                 to="/blog"
@@ -387,6 +388,23 @@ export const Navbar = ({ settologin }) => {
                                     }`}
                             >
                                 Blog
+                            </Link>
+                        </li>
+
+                        <li>
+                            <Link
+                                to="/add-product"
+                                className={`transition-all duration-300 ${
+                                    scrolled
+                                        ? "text-[#000000db] hover:text-[#0000008b]"
+                                        : "hover:text-[#ffffffa6]"
+                                } ${
+                                    location.pathname === "/pages"
+                                        ? "!text-main border-main"
+                                        : "border-[#fff0]"
+                                }`}
+                            >
+                                Đăng bài viết +
                             </Link>
                         </li>
                         {/* <li>
