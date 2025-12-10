@@ -19,16 +19,17 @@ export const Dashboard = () => {
         getUserById(id).then((data) => {
             setUserinfor(data.data);
         });
-    });
+    }, []);
     return (
         <div>
-            <div className='w-full h-[78px] bg-[#0f3714]'></div>
-            <div className='w-[1150px] mx-auto my-6 flex '>
-                <div className='w-[250px] h-full  bg-[#4C7F31] text-black py-[12px] rounded-[10px] shadow-xl'>
-                    <div className='w-[226px] h-full bg-white mx-auto rounded-[25px] rounded-tr-[80px] rounded-bl-[80px] px-[20px]'>
-                        <h1 className='font-bold text-[#4C7F31] text-[22px] pl-6 pt-8'>Dashboard</h1>
-                        <div className='mt-6 flex items bg-main/10 px-2 py-2 rounded-[10px]'>
-
+            <div className="w-full h-[78px] bg-[#0f3714]"></div>
+            <div className="w-[1150px] mx-auto my-6 flex ">
+                <div className="w-[250px] h-full  bg-[#4C7F31] text-black py-[12px] rounded-[10px] shadow-xl">
+                    <div className="w-[226px] h-full bg-white mx-auto rounded-[25px] rounded-tr-[80px] rounded-bl-[80px] px-[20px]">
+                        <h1 className="font-bold text-[#4C7F31] text-[22px] pl-6 pt-8">
+                            Dashboard
+                        </h1>
+                        <div className="mt-6 flex items bg-main/10 px-2 py-2 rounded-[10px]">
                             <div className="relative w-[55px] rounded-full]">
                                 <img
                                     className="absolute w-[45px]"
@@ -79,7 +80,7 @@ export const Dashboard = () => {
                             <div className="w-[80px] mx-auto bg-black/10 h-[.5px]"></div>
 
                             <Link
-                                to="/dashboard/statistics"  
+                                to="/dashboard/statistics"
                                 className="transition-all mb-[160px] duratiduratisn-300 w-full hover:bg-main/15 text-black/50 hover:text-[#4C7F31] py-2 rounded-[10px]"
                             >
                                 <div className="">Quản lý thống kê</div>

@@ -52,12 +52,12 @@ const AddProductFixed = () => {
 
                 if (data.success) {
                     setCategories(data.data || []);
-                    if (data.data?.length > 0) {
-                        setForm((prev) => ({
-                            ...prev,
-                            categoryid: data.data[0].id,
-                        }));
-                    }
+                    // if (data.data?.length > 0) {
+                    //     setForm((prev) => ({
+                    //         ...prev,
+                    //         categoryid: data.data[0].id,
+                    //     }));
+                    // }
                 }
             } catch (error) {
                 console.error("Load categories error:", error);
@@ -226,7 +226,7 @@ const AddProductFixed = () => {
                                     </label>
                                     <select
                                         name="categoryid"
-                                        value={form.categoryid}
+                                        value={form.categoryid || ""}
                                         onChange={handleChange}
                                         className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:outline-none appearance-none ${
                                             formErrors.categoryid

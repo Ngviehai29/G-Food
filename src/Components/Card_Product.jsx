@@ -6,124 +6,326 @@ import { ProductDetail } from "./ProductDetail";
 
 const PRIMARY_COLOR = "#97b545";
 const HOVER_COLOR = "#7d9931";
-
-// API URL của bạn
 const API_URL = "https://be-g-food.onrender.com/api";
 
 export const Card_Product = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showModal, setShowModal] = useState(false);
-
-    // Thêm state cho API data
     const [apiProducts, setApiProducts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [apiError, setApiError] = useState(null);
-
-    // THÊM STATE CHO PHÂN TRANG
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage] = useState(6); // 6 items mỗi trang
+    const [itemsPerPage] = useState(6);
 
-    // Thông tin chi tiết cho từng sản phẩm - GIỮ NGUYÊN
-    // const productDetails = {
-    //     "Gạo GT25": {
-    //         type: "Lương thực",
-    //         description:
-    //             "Gạo GT25 thơm ngon, chất lượng cao, gạo mới thu hoạch đảm bảo an toàn vệ sinh thực phẩm. Phù hợp cho các bữa ăn gia đình và hoạt động từ thiện.",
-    //         contact: "Nguyễn Văn A - 0901 234 567",
-    //     },
-    //     "Thịt Heo": {
-    //         type: "Thực phẩm tươi",
-    //         description:
-    //             "Thịt heo tươi ngon, đảm bảo chất lượng, nguồn gốc rõ ràng. Đã qua kiểm dịch và chế biến hợp vệ sinh. Thịt được bảo quản lạnh đúng tiêu chuẩn.",
-    //         contact: "Trần Thị B - 0902 345 678",
-    //     },
-    //     "Mỳ Tôm": {
-    //         type: "Đồ khô",
-    //         description:
-    //             "Mỳ tôm các loại, đa dạng hương vị, hạn sử dụng còn dài. Đóng gói nguyên bao bì, phù hợp cho các chương trình từ thiện và dự trữ.",
-    //         contact: "Lê Văn C - 0903 456 789",
-    //     },
-    //     "Rau Muống": {
-    //         type: "Rau xanh",
-    //         description:
-    //             "Rau muống tươi xanh, sạch sẽ, trồng theo phương pháp hữu cơ. Không sử dụng thuốc trừ sâu, thu hoạch trong ngày, đảm bảo tươi ngon.",
-    //         contact: "Phạm Thị D - 0904 567 890",
-    //     },
-    // };
+    // THÊM: State cho scroll
+    const [scrollRequest, setScrollRequest] = useState(null);
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // Lấy dữ liệu từ API khi component mount
+    // Lấy dữ liệu từ API
+    
+
+    // Trong Card_Product.js - sửa useEffect đầu tiên
+useEffect(() => {
+    fetchProductsFromAPI();
+
+    // Lắng nghe event từ Navbar khi ở bất kỳ trang nào
+    const handleScrollRequest = (event) => {
+        const { productId, productName, timestamp } = event.detail;
+        console.log("📡 Card_Product nhận scroll request:", productId);
+        
+        // Tạo scroll request ngay lập tức
+        setScrollRequest({
+            productId,
+            productName: productName || "Sản phẩm",
+            timestamp,
+            attempts: 0,
+            // THÊM: đánh dấu từ search
+            fromSearch: true
+        });
+    };
+
+    // THÊM: Lắng nghe sự kiện từ Navbar khi ở Home
+    const handleSearchInHome = (event) => {
+        const { productId, productName, force } = event.detail;
+        console.log(
+            `🏠 Card_Product nhận yêu cầu tìm sản phẩm từ Navbar: ${productId}`
+        );
+
+        // Tạo scroll request tương tự
+        setScrollRequest({
+            productId,
+            productName: productName || "Sản phẩm",
+            timestamp: Date.now(),
+            attempts: 0,
+            fromSearch: true,
+            force: force || false
+        });
+    };
+
+    window.addEventListener("scrollToProductFromSearch", handleScrollRequest);
+    window.addEventListener("searchProductInHome", handleSearchInHome);
+
+    return () => {
+        window.removeEventListener("scrollToProductFromSearch", handleScrollRequest);
+        window.removeEventListener("searchProductInHome", handleSearchInHome);
+    };
+}, []);
+
+    // Đánh dấu dữ liệu đã load xong
     useEffect(() => {
-        fetchProductsFromAPI();
-    }, []);
+        if (apiProducts.length > 0 || data_product.length > 0) {
+            setIsDataLoaded(true);
+            console.log("✅ Dữ liệu sản phẩm đã sẵn sàng");
+        }
+    }, [apiProducts, data_product]);
 
-    // Hàm lấy dữ liệu từ API
+    // Xử lý scroll request khi dữ liệu đã sẵn sàng
+    useEffect(() => {
+        if (scrollRequest && isDataLoaded) {
+            console.log(
+                "🚀 Xử lý scroll request cho:",
+                scrollRequest.productId
+            );
+
+            // Đợi một chút để DOM render xong
+            setTimeout(() => {
+                handleScrollToProduct(
+                    scrollRequest.productId,
+                    scrollRequest.productName
+                );
+                // Reset sau khi xử lý
+                setScrollRequest(null);
+            }, 800);
+        } else if (scrollRequest && !isDataLoaded) {
+            // Nếu chưa có dữ liệu, đợi thêm
+            console.log("⏳ Đang chờ dữ liệu để scroll...");
+
+            if (scrollRequest.attempts < 5) {
+                // Thử lại sau 1 giây
+                setTimeout(() => {
+                    setScrollRequest((prev) => ({
+                        ...prev,
+                        attempts: prev.attempts + 1,
+                    }));
+                }, 1000);
+            } else {
+                console.warn("❌ Không thể scroll sau nhiều lần thử");
+                setScrollRequest(null);
+            }
+        }
+    }, [scrollRequest, isDataLoaded]);
+
+    // Hàm scroll đến sản phẩm (THÊM productName parameter)
+    const handleScrollToProduct = (productId, productName = null) => {
+        console.log("🔍 Tìm sản phẩm với ID:", productId, "Tên:", productName);
+
+        const allProducts = apiProducts.length > 0 ? apiProducts : data_product;
+
+        // Tìm sản phẩm
+        let targetIndex = -1;
+        for (let i = 0; i < allProducts.length; i++) {
+            const p = allProducts[i];
+            const currentId = p.id || p.apiData?.id;
+            if (currentId && currentId.toString() === productId.toString()) {
+                targetIndex = i;
+                break;
+            }
+        }
+
+        if (targetIndex !== -1) {
+            // Tính trang
+            const targetPage = Math.floor(targetIndex / itemsPerPage) + 1;
+
+            if (targetPage !== currentPage) {
+                console.log(`🔄 Chuyển đến trang ${targetPage}`);
+                setCurrentPage(targetPage);
+
+                // Đợi trang mới render
+                setTimeout(() => {
+                    performScroll(productId, productName);
+                }, 1000);
+            } else {
+                performScroll(productId, productName);
+            }
+        } else {
+            console.warn("❌ Không tìm thấy sản phẩm với ID:", productId);
+
+            // Hiển thị thông báo nếu có productName
+            if (productName) {
+                showNotification(
+                    `"${productName}" không có trong danh sách sản phẩm`,
+                    "warning"
+                );
+            }
+        }
+    };
+
+    // Thực hiện scroll (THÊM productName parameter và cải thiện logic)
+    const performScroll = (productId, productName = null) => {
+        setTimeout(() => {
+            // TÌM BẰNG NHIỀU CÁCH
+            let element = document.getElementById(`product-${productId}`);
+
+            if (!element) {
+                element = document.querySelector(
+                    `[data-product-id="${productId}"]`
+                );
+            }
+
+            if (!element) {
+                const allProductElements =
+                    document.querySelectorAll("[data-product-id]");
+                for (const el of allProductElements) {
+                    if (el.dataset.productId === productId.toString()) {
+                        element = el;
+                        break;
+                    }
+                }
+            }
+
+            if (element) {
+                console.log(`✅ Tìm thấy element, đang scroll...`);
+
+                // Cuộn đến sản phẩm
+                element.scrollIntoView({
+                    behavior: "smooth",
+                    block: "center",
+                });
+
+                // Highlight
+                element.classList.add("highlight-search-result");
+                setTimeout(() => {
+                    element.classList.remove("highlight-search-result");
+                }, 3000);
+
+                console.log("🎉 Đã scroll đến sản phẩm thành công!");
+
+                // Hiển thị thông báo
+                if (productName) {
+                    showNotification(`Đã tìm thấy "${productName}"`, "success");
+                }
+            } else {
+                console.warn(
+                    "⚠️ Không tìm thấy element với ID:",
+                    `product-${productId}`
+                );
+
+                // Thử tìm lại sau 1 giây
+                setTimeout(() => {
+                    const retryElement =
+                        document.getElementById(`product-${productId}`) ||
+                        document.querySelector(
+                            `[data-product-id="${productId}"]`
+                        );
+                    if (retryElement) {
+                        console.log("🔄 Tìm thấy sau retry");
+                        retryElement.scrollIntoView({
+                            behavior: "smooth",
+                            block: "center",
+                        });
+                        retryElement.classList.add("highlight-search-result");
+                        setTimeout(() => {
+                            retryElement.classList.remove(
+                                "highlight-search-result"
+                            );
+                        }, 3000);
+
+                        if (productName) {
+                            showNotification(
+                                `Đã tìm thấy "${productName}"`,
+                                "success"
+                            );
+                        }
+                    } else {
+                        console.error("❌ Vẫn không tìm thấy sau retry");
+                        if (productName) {
+                            showNotification(
+                                `Không thể tìm thấy "${productName}"`,
+                                "warning"
+                            );
+                        }
+                    }
+                }, 1000);
+            }
+        }, 300);
+    };
+
+    // Hàm hiển thị thông báo (THÊM vào component)
+    const showNotification = (message, type = "info") => {
+        // Xóa notification cũ
+        const existingNotifications = document.querySelectorAll(
+            ".search-notification"
+        );
+        existingNotifications.forEach((notification) => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        });
+
+        // Tạo element thông báo
+        const notification = document.createElement("div");
+        notification.className = `search-notification ${type}`;
+        notification.innerHTML = `
+            <div class="flex items-center gap-2">
+                <span class="text-lg">${
+                    type === "success" ? "✅" : type === "warning" ? "⚠️" : "ℹ️"
+                }</span>
+                <span>${message}</span>
+            </div>
+        `;
+
+        // Thêm vào body
+        document.body.appendChild(notification);
+
+        // Tự động xóa sau 4 giây
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 4000);
+    };
+
+    // Hàm lấy dữ liệu từ API (giữ nguyên)
     const fetchProductsFromAPI = async () => {
         try {
             setLoading(true);
             setApiError(null);
 
-            // Gọi API với endpoint đúng của bạn
-            console.log("Fetching from API:", `${API_URL}/postnewshare/`);
-
             const response = await fetch(`${API_URL}/postnewshare/`, {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
             });
 
-            console.log("Response status:", response.status);
-
-            if (!response.ok) {
-                throw new Error(
-                    `API Error: ${response.status} ${response.statusText}`
-                );
-            }
+            if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
             const data = await response.json();
-            console.log("API Response data:", data);
 
-            // Kiểm tra cấu trúc response
             if (data.success && Array.isArray(data.data)) {
-                console.log("Found", data.data.length, "products from API");
-
-                // Chuyển đổi dữ liệu API sang format giống với data_product
-                const convertedProducts = data.data.map((item, index) => ({
-                    id: item.id || `api-product-${index}`,
+                const convertedProducts = data.data.map((item) => ({
+                    id: item.id,
                     name: item.name || "Sản phẩm không tên",
-                    // Xử lý ảnh: Post_images là mảng, lấy ảnh đầu tiên
                     img:
-                        item.Post_images && item.Post_images.length > 0
-                            ? item.Post_images[0].image
-                            : "https://placehold.co/400x300/e5e7eb/6b7280?text=Không+có+ảnh",
-                    // Lấy location từ User object
+                        item.Post_images?.[0]?.image ||
+                        "https://placehold.co/400x300/e5e7eb/6b7280?text=Không+có+ảnh",
                     location: item.User?.location || "Chưa có địa điểm",
-                    // Giữ thêm dữ liệu gốc từ API để dùng trong modal
                     apiData: item,
-                    // Thêm category nếu cần
                     category: item.Category?.name,
                 }));
 
                 setApiProducts(convertedProducts);
-                // Reset về trang 1 khi có dữ liệu mới
-                setCurrentPage(1);
             } else {
-                console.warn("API structure not as expected:", data);
                 setApiError("API trả về dữ liệu không đúng định dạng");
             }
         } catch (error) {
             console.error("Error fetching from API:", error);
             setApiError(`Lỗi kết nối API: ${error.message}`);
-            setApiProducts([]);
         } finally {
             setLoading(false);
         }
     };
 
-    // Quyết định dùng dữ liệu nào: Ưu tiên API, nếu không có thì dùng data_product
+    // Các hàm và biến khác giữ nguyên...
     const displayProducts = apiProducts.length > 0 ? apiProducts : data_product;
-
-    // THÊM: Logic phân trang
     const totalPages = Math.ceil(displayProducts.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -141,9 +343,7 @@ export const Card_Product = () => {
         document.body.style.overflow = "auto";
     };
 
-    // Lấy thông tin chi tiết của sản phẩm - CẬP NHẬT để check cả API data
     const getProductDetail = (product) => {
-        // Nếu product có apiData (từ API), lấy thông tin từ đó
         if (product.apiData) {
             const apiData = product.apiData;
             return {
@@ -158,14 +358,11 @@ export const Card_Product = () => {
                 userInfo: apiData.User?.name
                     ? `${apiData.User.name} - ${apiData.User.location || ""}`
                     : "Người chia sẻ",
-                // Thêm các thông tin khác nếu có
                 images: apiData.Post_images || [],
                 createdAt: apiData.created_at || apiData.createdAt,
             };
         }
 
-        // Nếu không, dùng productDetails cũ
-        // Fallback cho data_product (nếu không có API data)
         return {
             type: "Thực phẩm",
             description: "Sản phẩm chất lượng từ cộng đồng G-Food.",
@@ -175,10 +372,17 @@ export const Card_Product = () => {
         };
     };
 
-    // Component con cho Product Card
+    // Component ProductCard (THÊM toString() cho data-product-id)
     const ProductCard = ({ product, detail }) => {
+        const productId = product.id || product.apiData?.id;
+        const elementId = `product-${productId}`;
+
         return (
-            <div className="group transition-all duration-300 h-[340px] relative bg-white overflow-hidden rounded-xl shadow-md hover:shadow-xl border border-gray-100 flex flex-col">
+            <div
+                id={elementId}
+                data-product-id={productId ? productId.toString() : ""}
+                className="group transition-all duration-300 h-[340px] relative bg-white overflow-hidden rounded-xl shadow-md hover:shadow-xl border border-gray-100 flex flex-col"
+            >
                 {/* Product Image */}
                 <div className="relative h-[180px] overflow-hidden flex-shrink-0">
                     <img
@@ -200,13 +404,6 @@ export const Card_Product = () => {
                             {product.location}
                         </p>
                     </div>
-
-                    {/* API Indicator */}
-                    {/* {apiData && (
-                        <div className="absolute top-3 right-3 px-2 py-1 bg-green-500 text-white text-xs rounded-full">
-                            API
-                        </div>
-                    )} */}
 
                     {/* Detail Button */}
                     <button
@@ -271,7 +468,16 @@ export const Card_Product = () => {
 
     return (
         <>
-            {/* Thông báo trạng thái API và phân trang */}
+            {/* Hiển thị thông báo nếu có scroll request */}
+            {scrollRequest && (
+                <div className="fixed top-20 right-4 z-50 bg-blue-500 text-white p-3 rounded-lg shadow-lg animate-pulse">
+                    <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 bg-white rounded-full animate-bounce"></div>
+                        <span className="text-sm">Đang tìm sản phẩm...</span>
+                    </div>
+                </div>
+            )}
+
             <div className="mb-4 flex flex-col md:flex-row md:items-center justify-between">
                 <div>
                     {loading && (
@@ -327,15 +533,11 @@ export const Card_Product = () => {
                             { length: Math.min(totalPages, 5) },
                             (_, i) => {
                                 let pageNum;
-                                if (totalPages <= 5) {
-                                    pageNum = i + 1;
-                                } else if (currentPage <= 3) {
-                                    pageNum = i + 1;
-                                } else if (currentPage >= totalPages - 2) {
+                                if (totalPages <= 5) pageNum = i + 1;
+                                else if (currentPage <= 3) pageNum = i + 1;
+                                else if (currentPage >= totalPages - 2)
                                     pageNum = totalPages - 4 + i;
-                                } else {
-                                    pageNum = currentPage - 2 + i;
-                                }
+                                else pageNum = currentPage - 2 + i;
 
                                 return (
                                     <button
@@ -381,9 +583,8 @@ export const Card_Product = () => {
                 </div>
             </div>
 
-            {/* CHIA THÀNH 2 HÀNG, MỖI HÀNG 3 SẢN PHẨM */}
+            {/* Sản phẩm */}
             <div className="space-y-8">
-                {/* Hàng 1: 3 sản phẩm đầu */}
                 <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {currentProducts.slice(0, 3).map((product, index) => {
                         const detail = getProductDetail(product);
@@ -392,13 +593,11 @@ export const Card_Product = () => {
                                 key={`${product.id}-${index}`}
                                 product={product}
                                 detail={detail}
-                                apiData={product.apiData}
                             />
                         );
                     })}
                 </div>
 
-                {/* Hàng 2: 3 sản phẩm tiếp theo */}
                 {currentProducts.length > 3 && (
                     <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {currentProducts.slice(3, 6).map((product, index) => {
@@ -408,7 +607,6 @@ export const Card_Product = () => {
                                     key={`${product.id}-${index + 3}`}
                                     product={product}
                                     detail={detail}
-                                    apiData={product.apiData}
                                 />
                             );
                         })}
@@ -416,7 +614,7 @@ export const Card_Product = () => {
                 )}
             </div>
 
-            {/* Hiển thị modal chi tiết */}
+            {/* Modal */}
             {showModal && selectedProduct && (
                 <ProductDetail
                     product={selectedProduct}

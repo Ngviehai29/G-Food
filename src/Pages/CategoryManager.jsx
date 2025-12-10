@@ -1,11 +1,17 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import { getCategory, lockUser, unlockUser } from '../Services/authService';
-import { toast } from 'sonner'
+import React, { useEffect, useState } from 'react'
+import { getCategory, createCategory } from '../Services/authService';
+import { toast } from 'sonner';
 
 export const CategoryManager = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    // popup state
+    const [isOpen, setIsOpen] = useState(false);
+    const [newCate, setNewCate] = useState({
+        name: "",
+        description: ""
+    });
 
     const fetchUser = async () => {
         setLoading(true);
@@ -23,28 +29,27 @@ export const CategoryManager = () => {
         fetchUser();
     }, []);
 
-    const handleToggleStatus = async (id, currentStatus) => {
+    const handleAddCategory = async () => {
+        if (!newCate.name.trim()) {
+            toast.error("Tên danh mục không được để trống!");
+            return;
+        }
         setLoading(true);
         try {
+            await createCategory(newCate.name, newCate.description);
 
-            if (currentStatus) {
-                await lockUser(id);
-            } else {
-                await unlockUser(id);
-            }
+            toast.success("Thêm danh mục thành công!");
 
-            // cập nhật lại danh sách user
-            const updated = users.map(u =>
-                u.id === id ? { ...u, status: !u.status } : u
-            );
-            setUsers(updated);
+            // reset & đóng popup
+            setNewCate({ name: "", description: "" });
+            setIsOpen(false);
 
+            // reload list
+            fetchUser();
         } catch (error) {
-            toast.error("Cập nhập thất bại");
+            toast.error("Thêm không thành công!");
         } finally {
             setLoading(false);
-            toast.success("Cập nhập trạng thái thành công!");
-
         }
     };
 
@@ -58,26 +63,30 @@ export const CategoryManager = () => {
                             <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
                                 Quản lý danh mục
                             </h1>
-                            <p className="text-gray-600">
-                                Tất cả người dùng của hệ thống sẽ được hiển thị tại đây
-                            </p>
                         </div>
+
                         {loading &&
                             <div className="absolute z-[100] w-fit h-[100%] flex items-center right-6">
                                 <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-white"></div>
                             </div>
                         }
                     </div>
-                    <button className="bg-main text-white px-3 py-2 rounded">
+
+                    {/* NÚT MỞ POPUP */}
+                    <button
+                        onClick={() => setIsOpen(true)}
+                        className="bg-main text-white px-3 py-2 rounded"
+                    >
                         Thêm danh mục +
                     </button>
+
+                    {/* TABLE */}
                     <table className="w-full border mt-4 ">
                         <thead>
                             <tr className="bg-[#4C7F31] text-white">
-                                <th className="border p-2 w-[160px]">Tên danh mục</th>
-                                <th className="border p-2 ">Mô tả</th>
+                                <th className="border p-2 w-[180px]">Tên danh mục</th>
+                                <th className="border p-2 w-[520px]">Mô tả</th>
                                 <th className="border p-2 ">Hành động</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -86,16 +95,10 @@ export const CategoryManager = () => {
                                     <td className="border p-2">{u.name}</td>
                                     <td className="border p-2">{u.description}</td>
                                     <td className="border p-2 text-center flex gap-4 justify-center">
-                                        <button
-                                            onClick={() => handleToggleStatus(u.id, true)}
-                                            className="bg-yellow-500 text-white px-3 py-1 rounded"
-                                        >
+                                        <button className="bg-yellow-500 text-white px-3 py-1 rounded">
                                             Sửa
                                         </button>
-                                        <button
-                                            onClick={() => handleToggleStatus(u.id, false)}
-                                            className="bg-red-500 text-white px-3 py-1 rounded"
-                                        >
+                                        <button className="bg-red-500 text-white px-3 py-1 rounded">
                                             Xóa
                                         </button>
                                     </td>
@@ -103,8 +106,53 @@ export const CategoryManager = () => {
                             ))}
                         </tbody>
                     </table>
+
+                    {/* POPUP THÊM DANH MỤC */}
+                    {isOpen && (
+                        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-[200]">
+                            <div className="bg-white p-6 rounded-lg shadow-lg w-[400px]">
+                                <h2 className="text-xl font-bold mb-4">Thêm danh mục</h2>
+
+                                <label className="block mb-2">Tên danh mục</label>
+                                <input
+                                    type="text"
+                                    className="border px-3 py-2 rounded w-full mb-3"
+                                    value={newCate.name}
+                                    onChange={(e) =>
+                                        setNewCate({ ...newCate, name: e.target.value })
+                                    }
+                                />
+
+                                <label className="block mb-2">Mô tả</label>
+                                <textarea
+                                    className="border px-3 py-2 rounded w-full mb-3"
+                                    value={newCate.description}
+                                    onChange={(e) =>
+                                        setNewCate({ ...newCate, description: e.target.value })
+                                    }
+                                />
+
+                                <div className="flex justify-end gap-3">
+                                    <button
+                                        onClick={() => setIsOpen(false)}
+                                        className="px-3 py-2 bg-gray-300 rounded"
+                                    >
+                                        Hủy
+                                    </button>
+
+                                    <button
+                                        onClick={handleAddCategory}
+                                        className="px-3 py-2 bg-main text-white rounded"
+                                    >
+                                        Thêm
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </div>
     );
-}
+};
