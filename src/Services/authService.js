@@ -83,16 +83,30 @@ export const unlockUser = async (id) => {
     return res.data;
 };
 
+// get danh mục
 export const getCategory = async () => {
     const res = await axios.get(`${API}/categories`);
     return res.data;
 };
 
+// tạo danh mục
 export const createCategory = async (name, description) => {
   const res = await axios.post(`${API}/categories`, {
     name,
     description
   });
+  return res.data;
+};
+
+// Cập nhật danh mục
+export const updateCategory = async (id, name, description) => {
+  const res = await axios.put(`${API}/categories/${id}`, { name, description });
+  return res.data;
+};
+
+// Xóa danh mục
+export const deleteCategory = async (id) => {
+  const res = await axios.delete(`${API}/categories/${id}`);
   return res.data;
 };
 
