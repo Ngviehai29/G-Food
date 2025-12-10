@@ -88,6 +88,15 @@ export const getCategory = async () => {
     return res.data;
 };
 
+export const createCategory = async (name, description) => {
+  const res = await axios.post(`${API}/categories`, {
+    name,
+    description
+  });
+  return res.data;
+};
+
+
 
 
 

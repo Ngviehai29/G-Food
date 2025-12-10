@@ -52,18 +52,11 @@ function App() {
                         element={
                             <AdminRoute>
                                 <Dashboard />
-                            </AdminRoute>
-                        }
-                    >
-                        <Route path="/dashboard/qluser" element={<QLyUser />} />
-                        <Route path="/dashboard/category" element={<CategoryManager />} />
-
-
-                        <Route
-                            path="/dashboard/products"
-                            element={<ProductManagement />}
-                        />
-                        <Route path="/dashboard/statistics" element={<StatisticsManagement />} />
+                            </AdminRoute>}>
+                        <Route path="qluser" element={<QLyUser />} />
+                        <Route path="category" element={<CategoryManager />} />
+                        <Route path="products" element={<ProductManagement />}/>
+                        <Route path="statistics" element={<StatisticsManagement />} />
                     </Route>
                 </Routes>
 

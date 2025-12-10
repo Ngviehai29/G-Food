@@ -118,7 +118,7 @@ export const Navbar = ({ settologin }) => {
         getUserById(id).then((data) => {
             setUserinfor(data.data);
         })
-    })
+    },[])
     return (
         <div
             className={`fixed z-[99] w-[100%] transition-all duration-500 ${scrolled ? "h-[70px] bg-[#ffffffec] shadow-[0_6px_20px_rgba(0,0,0,0.15)]" : "h-[85px] bg-[#ffffff00]"
@@ -190,7 +190,7 @@ export const Navbar = ({ settologin }) => {
                                 About Us
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link
                                 to="/pages"
                                 className={`transition-all duration-300 ${scrolled
@@ -203,8 +203,8 @@ export const Navbar = ({ settologin }) => {
                             >
                                 Pages
                             </Link>
-                        </li>
-                        <li>
+                        </li> */}
+                        {/* <li>
                             <Link
                                 to="/service"
                                 className={`transition-all duration-300 ${scrolled
@@ -217,7 +217,7 @@ export const Navbar = ({ settologin }) => {
                             >
                                 Service
                             </Link>
-                        </li>
+                        </li> */}
                         <li>
                             <Link
                                 to="/blog"
@@ -232,7 +232,7 @@ export const Navbar = ({ settologin }) => {
                                 Blog
                             </Link>
                         </li>
-                        <li>
+                        {/* <li>
                             <Link
                                 to="/contact"
                                 className={`transition-all duration-300 ${scrolled
@@ -245,7 +245,7 @@ export const Navbar = ({ settologin }) => {
                             >
                                 Contact
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
                 <div className="w-[30%] search-container justify-end right flex gap-6 items-center">
