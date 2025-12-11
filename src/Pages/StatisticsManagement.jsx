@@ -108,10 +108,18 @@ export const StatisticsManagement = () => {
         return <p className="text-center text-lg font-semibold">Đang tải dữ liệu...</p>;
 
     return (
-        <div className="p-4 space-y-6">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
-                Quản lý thống kê
-            </h1>
+        <div className="p-4 space-y-6 bg-gray-50 rounded-lg shadow-xl ml-2 h-[607px]">
+
+            <div className="flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+                        Quản lý thống kê
+                    </h1>
+                    <p className="text-gray-600 mb-[14px]">
+                        Bao gồm người dùng, sản phẩm và danh mục!
+                    </p>
+                </div>
+            </div>
 
             {/* Tổng quan */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -199,7 +207,7 @@ export const StatisticsManagement = () => {
             )}
 
             {/* Bảng danh mục */}
-            <div className="p-4 border rounded-lg shadow-md">
+            {/* <div className="p-4 border rounded-lg shadow-md">
                 <h2 className="font-semibold mb-4">Danh sách danh mục</h2>
 
                 <div className="mb-3 flex items-center gap-2">
@@ -255,7 +263,7 @@ export const StatisticsManagement = () => {
                         Next →
                     </button>
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 };
