@@ -3,6 +3,7 @@ import flower from '../G-Food-Images/tree-01.svg';
 import blog_1 from '../G-Food-Images/treemvungcao.jpg'
 import blog_2 from '../G-Food-Images/treemvungcao.webp'
 import grass from '../G-Food-Images/grass_footer.svg'
+import { Link } from 'react-router-dom';
 
 export const Footer = () => {
     return (
@@ -40,35 +41,10 @@ export const Footer = () => {
                         </div>
                         <div className='w-8 h-[2px] bg-main my-6'></div>
                         <div className='flex flex-col gap-2 font-light'>
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
+                            <Link to="/add-product" className='flex gap-1 items-center cursor-pointer'>
                                 <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
-
-                            <a href='#' className='flex gap-1 items-center cursor-pointer'>
-                                <i class="fa-solid fa-angle-right text-[#DDB01B] inline text-[10px] mt-[2px]"></i>
-                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Lorem ipsum dolor sit amet</p>
-                            </a>
+                                <p className='text-white opacity-90 text-[14px] flex justify-center hover:opacity-60 transition-all duration-300'>Đăng bài viết +</p>
+                            </Link>           
                         </div>
                     </div>
 

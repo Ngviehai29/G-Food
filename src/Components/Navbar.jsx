@@ -272,8 +272,8 @@ export const Navbar = ({ settologin }) => {
     return (
         <div
             className={`fixed z-[99] w-[100%] transition-all duration-500 ${scrolled
-                    ? "h-[70px] bg-[#ffffffec] shadow-[0_6px_20px_rgba(0,0,0,0.15)]"
-                    : "h-[85px] bg-[#ffffff00]"
+                ? "h-[70px] bg-[#ffffffec] shadow-[0_6px_20px_rgba(0,0,0,0.15)]"
+                : "h-[85px] bg-[#ffffff00]"
                 }`}
         >
             {/* ... phần còn lại giữ nguyên ... */}
@@ -319,8 +319,8 @@ export const Navbar = ({ settologin }) => {
                             <Link
                                 to="/"
                                 className={`transition-all duration-300 ${scrolled
-                                        ? "text-[#000000db] hover:text-[#0000008b]"
-                                        : "hover:text-[#ffffffa6]"
+                                    ? "text-[#000000db] hover:text-[#0000008b]"
+                                    : "hover:text-[#ffffffa6]"
                                     } ${location.pathname === "/"
                                         ? "!text-main border-main"
                                         : "border-[#fff0]"
@@ -333,8 +333,8 @@ export const Navbar = ({ settologin }) => {
                             <Link
                                 to="/about"
                                 className={`transition-all duration-300 ${scrolled
-                                        ? "text-[#000000db] hover:text-[#0000008b]"
-                                        : "hover:text-[#ffffffa6]"
+                                    ? "text-[#000000db] hover:text-[#0000008b]"
+                                    : "hover:text-[#ffffffa6]"
                                     } ${location.pathname === "/about"
                                         ? "!text-main border-main"
                                         : "border-[#fff0]"
@@ -375,13 +375,13 @@ export const Navbar = ({ settologin }) => {
                                 Service
                             </Link>
                         </li> */}
-                        
-                        <li>
+
+                        {/* <li>
                             <Link
                                 to="/blog"
                                 className={`transition-all duration-300 ${scrolled
-                                        ? "text-[#000000db] hover:text-[#0000008b]"
-                                        : "hover:text-[#ffffffa6]"
+                                    ? "text-[#000000db] hover:text-[#0000008b]"
+                                    : "hover:text-[#ffffffa6]"
                                     } ${location.pathname === "/blog"
                                         ? "!text-main border-main"
                                         : "border-[#fff0]"
@@ -389,22 +389,20 @@ export const Navbar = ({ settologin }) => {
                             >
                                 Blog
                             </Link>
-                        </li>
+                        </li> */}
 
                         <li>
                             <Link
                                 to="/add-product"
-                                className={`transition-all duration-300 ${
-                                    scrolled
-                                        ? "text-[#000000db] hover:text-[#0000008b]"
-                                        : "hover:text-[#ffffffa6]"
-                                } ${
-                                    location.pathname === "/pages"
+                                className={`transition-all duration-300 ${scrolled
+                                    ? "text-[#000000db] hover:text-[#0000008b]"
+                                    : "hover:text-[#ffffffa6]"
+                                    } ${location.pathname === "/pages"
                                         ? "!text-main border-main"
                                         : "border-[#fff0]"
-                                }`}
+                                    }`}
                             >
-                                Đăng bài viết +
+                                Post +
                             </Link>
                         </li>
                         {/* <li>
@@ -469,16 +467,18 @@ export const Navbar = ({ settologin }) => {
 
                                         {/* Menu */}
                                         <div className="relative px-8 mt-6 flex flex-col gap-2 text-left h-full">
-                                            {user?.Roles?.[0]?.rolename ===
-                                                "admin" && (
-                                                    <Link to="/dashboard">
-                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                            Dashboard
-                                                            <i className="fa-solid fa-bars-progress text-[13px] pl-[5px]"></i>
-                                                        </button>
-                                                    </Link>
-                                                )}
 
+                                            {/* ADMIN */}
+                                            {user?.Roles?.[0]?.rolename === "admin" && (
+                                                <Link to="/dashboard">
+                                                    <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                        Dashboard
+                                                        <i className="fa-solid fa-bars-progress text-[13px] pl-[5px]"></i>
+                                                    </button>
+                                                </Link>
+                                            )}
+
+                                            {/* TÀI KHOẢN */}
                                             <Link to="/inforuser">
                                                 <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
                                                     Tài khoản
@@ -486,41 +486,52 @@ export const Navbar = ({ settologin }) => {
                                                 </button>
                                             </Link>
 
-                                            <Link to="/add-product">
-                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                    Đăng bài viết
-                                                    <i className="fa-solid fa-plus text-[13px] pl-[5px]"></i>
-                                                </button>
-                                            </Link>
-                                            {/* DUYỆT SẢN PHẨM */}
-                                            <Link to="/manage-requests">
-                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                    Duyệt Sản Phẩm
-                                                    <i className="fa-solid fa-check-to-slot text-[12px] pl-[5px]"></i>
-                                                </button>
-                                            </Link>
-                                            {/*Lịch Sử Nhận*/}
-                                            <Link to="/history-received">
-                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                    Lịch sử Nhận
-                                                    <i className="fa-solid fa-clock-rotate-left text-[5x] pl-[3px]"></i>
-                                                </button>
-                                            </Link>
-                                            <Link to="/receive-products">
-                                                <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                    Đã duyệt 
-                                                    <i className="fa-solid fa-box text-[13px] pl-[3px]"></i>
-                                                </button>
-                                            </Link>
+                                            {/* USER */}
+                                            {user?.Roles?.[0]?.rolename === "user" && (
+                                                <>
+                                                    <Link to="/add-product">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Đăng bài viết
+                                                            <i className="fa-solid fa-plus text-[13px] pl-[5px]"></i>
+                                                        </button>
+                                                    </Link>
+
+                                                    {/* DUYỆT SẢN PHẨM */}
+                                                    <Link to="/manage-requests">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Duyệt Sản Phẩm
+                                                            <i className="fa-solid fa-check-to-slot text-[12px] pl-[5px]"></i>
+                                                        </button>
+                                                    </Link>
+
+                                                    {/* LỊCH SỬ NHẬN */}
+                                                    <Link to="/history-received">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Lịch sử Nhận
+                                                            <i className="fa-solid fa-clock-rotate-left text-[13px] pl-[3px]"></i>
+                                                        </button>
+                                                    </Link>
+
+                                                    {/* Đã duyệt */}
+                                                    <Link to="/receive-products">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Đã duyệt
+                                                            <i className="fa-solid fa-box text-[13px] pl-[3px]"></i>
+                                                        </button>
+                                                    </Link>
+                                                </>
+                                            )}
+
                                             {/* Đăng xuất */}
                                             <button
                                                 onClick={handleLogout}
-                                                className="absolute bottom-[150px] left-1/2 -translate-x-1/2 bg-red-500 hover:bg-red-400 text-white transition-all duration-300 rounded-lg p-2 flex justify-center items-center mt-10 w-[160px] "
+                                                className="absolute bottom-[150px] left-1/2 -translate-x-1/2 bg-red-500 hover:bg-red-400 text-white transition-all duration-300 rounded-lg p-2 flex justify-center items-center mt-10 w-[160px]"
                                             >
                                                 Đăng xuất
                                                 <i className="fa-solid fa-arrow-right-from-bracket text-[13px] pl-[5px]"></i>
                                             </button>
                                         </div>
+
                                     </div>
                                 </div>
                             </>
@@ -532,16 +543,16 @@ export const Navbar = ({ settologin }) => {
                                         to="/signup"
                                         onClick={() => settologin(true)}
                                         className={`${scrolled
-                                                ? "text-black"
-                                                : "text-white"
+                                            ? "text-black"
+                                            : "text-white"
                                             } hover:opacity-70`}
                                     >
                                         Đăng ký
                                     </Link>
                                     <span
                                         className={`${scrolled
-                                                ? "text-[#00000050]"
-                                                : "text-white/60"
+                                            ? "text-[#00000050]"
+                                            : "text-white/60"
                                             }`}
                                     >
                                         |
@@ -550,8 +561,8 @@ export const Navbar = ({ settologin }) => {
                                         to="/signup"
                                         onClick={() => settologin(false)}
                                         className={`${scrolled
-                                                ? "text-black"
-                                                : "text-white"
+                                            ? "text-black"
+                                            : "text-white"
                                             } hover:opacity-70`}
                                     >
                                         Đăng nhập
