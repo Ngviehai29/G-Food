@@ -1,44 +1,37 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import {
-    BarChart,
-    Bar,
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    Tooltip,
-    CartesianGrid,
-    Legend,
-    ResponsiveContainer,
+    BarChart, Bar, LineChart, Line,
+    XAxis, YAxis, Tooltip, CartesianGrid,
+    Legend, ResponsiveContainer,
 } from "recharts";
 
+import { getAllUser, getCategory, getAllProducts } from "../Services/authService";
+
 export const StatisticsManagement = () => {
-    const API = "https://be-g-food.onrender.com/api";
 
     const [users, setUsers] = useState([]);
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // --------------------------
-    // LOAD API THẬT
-    // --------------------------
+    // 👉 lưu danh mục đang được chọn
+    const [selectedCategory, setSelectedCategory] = useState(null);
+
     const fetchData = async () => {
         try {
             const [userRes, categoryRes, productRes] = await Promise.all([
-                axios.get(`${API}/user`),        // 🔥 ĐÚNG ROUTE
-                axios.get(`${API}/category`),    // 🔥 ĐÚNG ROUTE
-                axios.get(`${API}/postnewshare`) // 🔥 ĐÚNG ROUTE
+                getAllUser(),
+                getCategory(),
+                getAllProducts(),
             ]);
 
-            setUsers(userRes.data.data);
-            setCategories(categoryRes.data.data);
-            setProducts(productRes.data.data);
+            setUsers(userRes.data);
+            setCategories(categoryRes.data);
+            setProducts(productRes.data);
 
-            setLoading(false);
         } catch (err) {
-            console.log("Lỗi tải dữ liệu:", err);
+            console.log("Lỗi load API:", err);
+        } finally {
             setLoading(false);
         }
     };
@@ -50,20 +43,43 @@ export const StatisticsManagement = () => {
     // --------------------------
     const userStats = {
         totalUsers: users.length,
-        activeUsers: users.filter(u => u.status === true).length,
-        inactiveUsers: users.filter(u => u.status === false).length,
     };
 
     // --------------------------
-    // ĐẾM SẢN PHẨM THEO DANH MỤC
+    // THỐNG KÊ SẢN PHẨM + DANH MỤC
     // --------------------------
-    const categoryData = categories.map((c) => {
-        const count = products.filter(
-            (p) => p.Category?.name?.toLowerCase() === c.name.toLowerCase()
-        ).length;
+    const productStats = {
+        totalProducts: products.length,
+    };
 
-        return { id: c.id, name: c.name, productCount: count };
-    });
+    const categoryStats = {
+        totalCategories: categories.length,
+    };
+
+    // --------------------------
+    // ĐẾM + SẮP XẾP SẢN PHẨM THEO DANH MỤC
+    // --------------------------
+    const categoryData = categories
+        .map((c) => {
+            const count = products.filter(
+                (p) => p.Category?.name?.toLowerCase() === c.name.toLowerCase()
+            ).length;
+
+            return { id: c.id, name: c.name, productCount: count };
+        })
+        .sort((a, b) => b.productCount - a.productCount);   // 🟦 SORT GIẢM DẦN
+
+    // --------------------------
+    // CLICK VÀO BIỂU ĐỒ → LẤY DANH SÁCH SẢN PHẨM
+    // --------------------------
+    const handleBarClick = (data) => {
+        const catName = data.name.toLowerCase();
+        const list = products.filter(
+            (p) => p.Category?.name?.toLowerCase() === catName
+        );
+
+        setSelectedCategory({ name: data.name, list });
+    };
 
     // --------------------------
     // SỐ SẢN PHẨM THEO THÁNG
@@ -74,7 +90,7 @@ export const StatisticsManagement = () => {
     }));
 
     products.forEach((p) => {
-        const month = new Date(p.createat).getMonth(); // 🔥 FIX FIELD createat
+        const month = new Date(p.createat).getMonth();
         monthlyStats[month].products += 1;
     });
 
@@ -93,14 +109,18 @@ export const StatisticsManagement = () => {
 
     return (
         <div className="p-4 space-y-6">
-            <h1 className="text-2xl font-bold text-blue-700">📊 Quản lý thống kê</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
+                Quản lý thống kê
+            </h1>
 
             {/* Tổng quan */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                     { label: "Tổng người dùng", value: userStats.totalUsers, color: "bg-blue-500" },
-                    { label: "Đang hoạt động", value: userStats.activeUsers, color: "bg-green-500" },
-                    { label: "Không hoạt động", value: userStats.inactiveUsers, color: "bg-red-500" },
+
+                    // 🟦 THÊM 2 Ô MỚI
+                    { label: "Tổng sản phẩm", value: productStats.totalProducts, color: "bg-purple-500" },
+                    { label: "Tổng danh mục", value: categoryStats.totalCategories, color: "bg-orange-500" },
                 ].map(item => (
                     <div key={item.label} className={`${item.color} text-white p-4 rounded-lg shadow-md`}>
                         <p className="text-sm">{item.label}</p>
@@ -109,8 +129,10 @@ export const StatisticsManagement = () => {
                 ))}
             </div>
 
+
             {/* Biểu đồ */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
                 <div className="p-4 border rounded-lg shadow-md">
                     <h2 className="font-semibold mb-2">Sản phẩm theo danh mục</h2>
                     <ResponsiveContainer width="100%" height={250}>
@@ -120,7 +142,11 @@ export const StatisticsManagement = () => {
                             <YAxis />
                             <Tooltip />
                             <Legend />
-                            <Bar dataKey="productCount" fill="#4f46e5" />
+                            <Bar
+                                dataKey="productCount"
+                                fill="#4f46e5"
+                                onClick={handleBarClick}     // 🟦 CLICK VÀO CỘT
+                            />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -138,13 +164,44 @@ export const StatisticsManagement = () => {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
+
             </div>
+
+            {/* Modal hiển thị sản phẩm theo danh mục */}
+            {selectedCategory && (
+                <div className="fixed inset-0 flex justify-center items-center">
+                    <div onClick={() => setSelectedCategory(null)} className="w-full h-full absolute bg-black bg-opacity-40 z-[-1]"></div>
+                    <div className="bg-white p-6 rounded-lg shadow-xl w-[500px] max-h-[80vh] overflow-y-auto ">
+                        <h2 className="text-lg font-bold mb-3">
+                            Danh mục: {selectedCategory.name}
+                        </h2>
+
+                        {selectedCategory.list.length === 0 ? (
+                            <p className="text-gray-500 text-center">Không có sản phẩm nào.</p>
+                        ) : (
+                            <ul className="space-y-2">
+                                {selectedCategory.list.map((item) => (
+                                    <li key={item.id} className="p-2 border rounded">
+                                        {item.title || item.name || "Sản phẩm không tên"}
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                        <button
+                            onClick={() => setSelectedCategory(null)}
+                            className="mt-4 px-4 py-2 bg-red-600 text-white rounded"
+                        >
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            )}
 
             {/* Bảng danh mục */}
             <div className="p-4 border rounded-lg shadow-md">
                 <h2 className="font-semibold mb-4">Danh sách danh mục</h2>
 
-                {/* chọn số item */}
                 <div className="mb-3 flex items-center gap-2">
                     <p>Hiển thị:</p>
                     <select
@@ -163,9 +220,8 @@ export const StatisticsManagement = () => {
                 </div>
 
                 <table className="w-full border">
-                    <thead className="bg-gray-100">
+                    <thead className="bg-[#4C7F31] text-white">
                         <tr>
-                            <th className="border p-2">ID</th>
                             <th className="border p-2">Tên danh mục</th>
                             <th className="border p-2">Số sản phẩm</th>
                         </tr>
@@ -173,8 +229,7 @@ export const StatisticsManagement = () => {
                     <tbody>
                         {visibleItems.map((item) => (
                             <tr key={item.id}>
-                                <td className="border p-2 text-center">{item.id}</td>
-                                <td className="border p-2">{item.name}</td>
+                                <td className="border p-2 w-[50%]">{item.name}</td>
                                 <td className="border p-2 text-center">{item.productCount}</td>
                             </tr>
                         ))}

@@ -45,6 +45,13 @@ export const QLyUser = () => {
         }
     };
 
+    //thống kê người dùng
+    const userStats = {
+        total: users.length,
+        active: users.filter(u => u.status === true).length,
+        inactive: users.filter(u => u.status === false).length
+    };
+
     /** -----------------------------
      *  Tìm kiếm client-side
      ------------------------------ */
@@ -77,13 +84,32 @@ export const QLyUser = () => {
                                 Quản lý người dùng
                             </h1>
                             <p className="text-gray-600 mb-[16px]">
-                            Tất cả người dùng của hệ thống sẽ được hiển thị tại đây!
+                                Tất cả người dùng của hệ thống sẽ được hiển thị tại đây!
                             </p>
                         </div>
                         {loading && (
                             <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-main"></div>
                         )}
                     </div>
+
+                    {/* Thống kê người dùng */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div className="bg-white text-black p-4 rounded-lg shadow">
+                            <p className="text-sm">Tổng người dùng</p>
+                            <p className="text-xl font-bold">{userStats.total}</p>
+                        </div>
+
+                        <div className="bg-white text-black p-4 rounded-lg shadow">
+                            <p className="text-sm">Đang hoạt động</p>
+                            <p className="text-xl font-bold">{userStats.active}</p>
+                        </div>
+
+                        <div className="bg-white text-black p-4 rounded-lg shadow">
+                            <p className="text-sm">Đã khóa</p>
+                            <p className="text-xl font-bold">{userStats.inactive}</p>
+                        </div>
+                    </div>
+
 
                     {/* 🔍 Ô tìm kiếm */}
                     <div className="mb-4">

@@ -40,6 +40,12 @@ export const CategoryManager = () => {
         fetchUser();
     }, []);
 
+    // tổng số danh mục
+    const categoryStats = {
+        total: users.length
+    };
+
+
     // ===============================
     // THÊM DANH MỤC
     // ===============================
@@ -136,9 +142,16 @@ export const CategoryManager = () => {
                                 Tất cả danh mục sản phẩm được hiển thị tại đây!
                             </p>
                         </div>
+
                         {loading && (
                             <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-main"></div>
                         )}
+                    </div>
+
+                    {/* Thống kê danh mục */}
+                    <div className="bg-white text-black p-4 rounded-lg shadow mb-4 w-[300px] items-center">
+                        <p className="text-sm">Tổng danh mục: </p>
+                        <p className="text-lg font-bold">{categoryStats.total}</p>
                     </div>
 
                     {/* Nút mở popup thêm */}
@@ -151,7 +164,7 @@ export const CategoryManager = () => {
 
                     {/* Ô tìm kiếm */}
                     <div className="mt-4 inline ml-6">
-                        
+
                         <input
                             type="text"
                             placeholder="Tìm kiếm danh mục..."
@@ -161,7 +174,7 @@ export const CategoryManager = () => {
                                 setSearch(e.target.value);
                                 setCurrentPage(1);
                             }}
-                            
+
                         />
                     </div>
 

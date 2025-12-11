@@ -110,6 +110,11 @@ export const deleteCategory = async (id) => {
   return res.data;
 };
 
+export const getAllProducts = async () => {
+    const res = await axios.get(`${API}/postnewshare`);
+    return res.data;
+};
+
 
 
 
