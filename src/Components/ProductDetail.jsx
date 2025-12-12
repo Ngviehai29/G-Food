@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { X, MapPin, User, Phone, Package, Info, Loader2 } from "lucide-react";
 // Bỏ import Link nếu không cần chuyển hướng ngay sau khi nhấn
-// import { Link } from "react-router-dom"; 
+// import { Link } from "react-router-dom";
 
 const PRIMARY_COLOR = "#97b545";
 const HOVER_COLOR = "#7d9931";
@@ -10,7 +10,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
     const [productDetail, setProductDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
     // ✨ STATE MỚI: Quản lý trạng thái yêu cầu
     const [requestStatus, setRequestStatus] = useState("default"); // 'default', 'pending', 'success', 'error'
 
@@ -48,12 +48,14 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                     const formattedDetail = {
                         id: foundProduct.id,
                         name: foundProduct.name,
-                        images: foundProduct.Post_image || [],
-                        type: foundProduct.category?.name || "Thực phẩm",
+                        images: foundProduct.Post_images || [],
+                        type: foundProduct.Category?.name || "Thực phẩm",
                         user: foundProduct.User || {},
                         location:
                             foundProduct.User?.location || "Chưa có địa điểm",
-                        description: "Sản phẩm chất lượng từ cộng đồng G-Food",
+                        description:
+                            foundProduct.content ||
+                            "Sản phẩm chất lượng từ cộng đồng G-Food",
                         contact:
                             foundProduct.User?.phone || "Liên hệ qua ứng dụng",
                     };
@@ -71,7 +73,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
             setLoading(false);
         }
     };
-    
+
     // ✨ HÀM XỬ LÝ KHI NHẤN NÚT "NHẬN SẢN PHẨM"
     const handleReceiveProduct = () => {
         // Chuyển trạng thái sang "pending" ngay lập tức
@@ -80,17 +82,17 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
         // Mô phỏng việc gửi yêu cầu tới API
         // Nếu bạn có API gửi yêu cầu thực tế, hãy đặt nó ở đây
         // Ví dụ: await sendRequestApi(product.id);
-        
+
         // Giả lập thời gian xử lý để nút hiển thị "Chờ duyệt"
         setTimeout(() => {
             // Sau khi API xử lý xong (thành công hoặc thất bại)
-            // Bạn có thể chuyển trạng thái (ví dụ: setRequestStatus("success") 
+            // Bạn có thể chuyển trạng thái (ví dụ: setRequestStatus("success")
             // và hiển thị thông báo, hoặc giữ nguyên 'pending' nếu yêu cầu cần duyệt thủ công).
-            // setRequestStatus("success"); 
+            // setRequestStatus("success");
         }, 1500);
-        
+
         // Nếu bạn muốn chuyển hướng sang trang nhận sản phẩm sau khi nhấn:
-        // window.location.href = "/receiveproduct"; 
+        // window.location.href = "/receiveproduct";
     };
 
     if (!product) return null;
@@ -188,6 +190,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                         <div className="bg-blue-50 rounded-xl p-4">
                             <p className="text-gray-700 leading-relaxed">
                                 {detail.description ||
+                                    detail.content ||
                                     "Sản phẩm chất lượng từ cộng đồng G-Food"}
                             </p>
                         </div>
@@ -244,43 +247,47 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                         >
                             Đóng
                         </button>
-                        
+
                         {/* ✨ Nút NHẬN SẢN PHẨM/CHỜ DUYỆT ĐÃ ĐƯỢC CẬP NHẬT */}
                         <button
-                            onClick={isPending ? undefined : handleReceiveProduct}
+                            onClick={
+                                isPending ? undefined : handleReceiveProduct
+                            }
                             disabled={isPending}
                             className={`px-5 py-3 text-white font-bold rounded-lg transition duration-300 shadow-lg flex-1 active:scale-95 flex items-center justify-center
-                                ${isPending ? 'cursor-not-allowed' : 'hover:shadow-xl'}`}
+                                ${
+                                    isPending
+                                        ? "cursor-not-allowed"
+                                        : "hover:shadow-xl"
+                                }`}
                             style={{
                                 // Thay đổi màu nền dựa trên trạng thái
-                                backgroundColor: isPending ? pendingBgColor : PRIMARY_COLOR,
-                                background: isPending 
-                                    ? `linear-gradient(135deg, ${pendingBgColor}, #b2b2b2)` 
+                                backgroundColor: isPending
+                                    ? pendingBgColor
+                                    : PRIMARY_COLOR,
+                                background: isPending
+                                    ? `linear-gradient(135deg, ${pendingBgColor}, #b2b2b2)`
                                     : `linear-gradient(135deg, ${PRIMARY_COLOR}, ${HOVER_COLOR})`,
-                                boxShadow: isPending 
-                                    ? "none" 
+                                boxShadow: isPending
+                                    ? "none"
                                     : "0 4px 12px rgba(151, 181, 69, 0.25)",
                             }}
                             onMouseOver={(e) => {
                                 if (!isPending) {
                                     e.currentTarget.style.opacity = "0.9";
-                                    e.currentTarget.style.transform = "translateY(-1px)";
+                                    e.currentTarget.style.transform =
+                                        "translateY(-1px)";
                                 }
                             }}
                             onMouseOut={(e) => {
                                 if (!isPending) {
                                     e.currentTarget.style.opacity = "1";
-                                    e.currentTarget.style.transform = "translateY(0)";
+                                    e.currentTarget.style.transform =
+                                        "translateY(0)";
                                 }
                             }}
                         >
-                            {isPending ? (
-                                
-                                    "Chờ duyệt"
-                                
-                            ) : (
-                                "Nhận sản phẩm"
-                            )}
+                            {isPending ? "Chờ duyệt" : "Nhận sản phẩm"}
                         </button>
                     </div>
                 </div>
