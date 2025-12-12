@@ -91,8 +91,8 @@ export const Home = () => {
                 <div
                     ref={ref}
                     className={`transition-all duration-[1s] content absolute z-[3] top-[50%] left-[50%] translate-x-[-105%] ${visible
-                            ? "opacity-100 translate-y-[-50%]"
-                            : "opacity-0 translate-y-[-20%]"
+                        ? "opacity-100 translate-y-[-50%]"
+                        : "opacity-0 translate-y-[-20%]"
                         }`}
                 >
                     {/* <div className="content absolute top-[50%] left-[35%] translate-x-[-50%] translate-y-[-50%]"> */}
@@ -145,9 +145,23 @@ export const Home = () => {
             </div>
 
             {/* Blog */}
-            <div className="mt-8 bg-[#F2F4F7] py-4">
+            <div className="mt-8 bg-[#F2F4F7] py-1">
                 <Card_Blog_Slide />
             </div>
+
+            {/* Map */}
+            <div className="w-full h-[350px] border-t-2 border-[#0F3714]">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30673.68967742132!2d108.16083767438057!3d16.054525970061682!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31421938d61a3ce5%3A0x29d80f3ebbdcb44a!2zxJDhuqFpIEjhu41jIER1eSBUw6JuIEjDsmEgS2jDoW5oIE5hbQ!5e0!3m2!1svi!2s!4v1765554961910!5m2!1svi!2s"
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+            </div>
+
         </div>
     );
 };
