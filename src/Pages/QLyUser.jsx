@@ -96,17 +96,17 @@ export const QLyUser = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                         <div className="bg-white text-black p-4 rounded-lg shadow">
                             <p className="text-sm">Tổng người dùng</p>
-                            <p className="text-xl font-bold">{userStats.total}</p>
+                            <p className="text-xl font-bold text-blue-500">{userStats.total}</p>
                         </div>
 
                         <div className="bg-white text-black p-4 rounded-lg shadow">
                             <p className="text-sm">Đang hoạt động</p>
-                            <p className="text-xl font-bold">{userStats.active}</p>
+                            <p className="text-xl font-bold text-green-500">{userStats.active}</p>
                         </div>
 
                         <div className="bg-white text-black p-4 rounded-lg shadow">
                             <p className="text-sm">Đã khóa</p>
-                            <p className="text-xl font-bold">{userStats.inactive}</p>
+                            <p className="text-xl font-bold text-red-500">{userStats.inactive}</p>
                         </div>
                     </div>
 

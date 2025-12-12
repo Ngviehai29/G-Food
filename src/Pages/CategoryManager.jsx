@@ -149,9 +149,9 @@ export const CategoryManager = () => {
                     </div>
 
                     {/* Thống kê danh mục */}
-                    <div className="bg-white text-black p-4 rounded-lg shadow mb-4 w-[300px] items-center">
+                    <div className="bg-white text-black p-4 rounded-lg shadow mb-4 w-[275px] items-center">
                         <p className="text-sm">Tổng danh mục: </p>
-                        <p className="text-lg font-bold">{categoryStats.total}</p>
+                        <p className="text-lg font-bold text-[#4C7F31]">{categoryStats.total}</p>
                     </div>
 
                     {/* Nút mở popup thêm */}
