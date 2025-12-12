@@ -22,54 +22,62 @@ export const Card_Product = () => {
     const [isDataLoaded, setIsDataLoaded] = useState(false);
 
     // Lấy dữ liệu từ API
-    
 
     // Trong Card_Product.js - sửa useEffect đầu tiên
-useEffect(() => {
-    fetchProductsFromAPI();
+    useEffect(() => {
+        fetchProductsFromAPI();
 
-    // Lắng nghe event từ Navbar khi ở bất kỳ trang nào
-    const handleScrollRequest = (event) => {
-        const { productId, productName, timestamp } = event.detail;
-        console.log("📡 Card_Product nhận scroll request:", productId);
-        
-        // Tạo scroll request ngay lập tức
-        setScrollRequest({
-            productId,
-            productName: productName || "Sản phẩm",
-            timestamp,
-            attempts: 0,
-            // THÊM: đánh dấu từ search
-            fromSearch: true
-        });
-    };
+        // Lắng nghe event từ Navbar khi ở bất kỳ trang nào
+        const handleScrollRequest = (event) => {
+            const { productId, productName, timestamp } = event.detail;
+            console.log("📡 Card_Product nhận scroll request:", productId);
 
-    // THÊM: Lắng nghe sự kiện từ Navbar khi ở Home
-    const handleSearchInHome = (event) => {
-        const { productId, productName, force } = event.detail;
-        console.log(
-            `🏠 Card_Product nhận yêu cầu tìm sản phẩm từ Navbar: ${productId}`
+            // Tạo scroll request ngay lập tức
+            setScrollRequest({
+                productId,
+                productName: productName || "Sản phẩm",
+                timestamp,
+                attempts: 0,
+                // THÊM: đánh dấu từ search
+                fromSearch: true,
+            });
+        };
+
+        // THÊM: Lắng nghe sự kiện từ Navbar khi ở Home
+        const handleSearchInHome = (event) => {
+            const { productId, productName, force } = event.detail;
+            console.log(
+                `🏠 Card_Product nhận yêu cầu tìm sản phẩm từ Navbar: ${productId}`
+            );
+
+            // Tạo scroll request tương tự
+            setScrollRequest({
+                productId,
+                productName: productName || "Sản phẩm",
+                timestamp: Date.now(),
+                attempts: 0,
+                fromSearch: true,
+                force: force || false,
+            });
+        };
+
+        window.addEventListener(
+            "scrollToProductFromSearch",
+            handleScrollRequest
         );
+        window.addEventListener("searchProductInHome", handleSearchInHome);
 
-        // Tạo scroll request tương tự
-        setScrollRequest({
-            productId,
-            productName: productName || "Sản phẩm",
-            timestamp: Date.now(),
-            attempts: 0,
-            fromSearch: true,
-            force: force || false
-        });
-    };
-
-    window.addEventListener("scrollToProductFromSearch", handleScrollRequest);
-    window.addEventListener("searchProductInHome", handleSearchInHome);
-
-    return () => {
-        window.removeEventListener("scrollToProductFromSearch", handleScrollRequest);
-        window.removeEventListener("searchProductInHome", handleSearchInHome);
-    };
-}, []);
+        return () => {
+            window.removeEventListener(
+                "scrollToProductFromSearch",
+                handleScrollRequest
+            );
+            window.removeEventListener(
+                "searchProductInHome",
+                handleSearchInHome
+            );
+        };
+    }, []);
 
     // Đánh dấu dữ liệu đã load xong
     useEffect(() => {
@@ -310,6 +318,7 @@ useEffect(() => {
                     location: item.User?.location || "Chưa có địa điểm",
                     apiData: item,
                     category: item.Category?.name,
+                    content: item.content || "", // Lấy mô tả từ content
                 }));
 
                 setApiProducts(convertedProducts);
@@ -349,6 +358,7 @@ useEffect(() => {
             return {
                 type: apiData.Category?.name || "Thực phẩm",
                 description:
+                    apiData.content ||
                     apiData.description ||
                     "Sản phẩm được chia sẻ từ cộng đồng G-Food.",
                 contact:
@@ -365,7 +375,8 @@ useEffect(() => {
 
         return {
             type: "Thực phẩm",
-            description: "Sản phẩm chất lượng từ cộng đồng G-Food.",
+            description:
+                product.content ||  "Sản phẩm chất lượng từ cộng đồng G-Food.",
             contact: "Liên hệ qua ứng dụng",
             userInfo: "Người chia sẻ",
             images: [],
