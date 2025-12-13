@@ -110,7 +110,7 @@ export const deleteCategory = async (id) => {
 };
 
 export const getAllProducts = async () => {
-    const res = await axios.get(`${API}/postnewshare`);
+    const res = await axios.get(`${API}/postnewshare/admin`);
     return res.data;
 };
 
