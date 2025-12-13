@@ -1,14 +1,13 @@
 import axios from "axios";
-
 const API = process.env.REACT_APP_API_URL;
 
 export const login = async (email, password) => {
     const res = await axios.post(`${API}/auth/login`, { email, password });
     return res.data;
     // Lưu thông tin user vào localStorage khi đăng nhập thành công
-    if (res.data && res.data.user) {
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-    }
+    // if (res.data && res.data.user) {
+    //     localStorage.setItem("user", JSON.stringify(res.data.user));
+    // }
 
     return res.data;
 };

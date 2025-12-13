@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
     Search,
     Filter,
@@ -13,7 +13,6 @@ import {
     Lock,
     LockOpen,
     Image as ImageIcon,
-    Hash,
     CheckCircle2,
 } from "lucide-react";
 
@@ -48,13 +47,31 @@ const ProductManagement = () => {
 
     // State lưu trữ trạng thái khóa
     const [lockedProducts, setLockedProducts] = useState(() => {
-        const saved = localStorage.getItem("lockedProducts");
-        return saved ? JSON.parse(saved) : {};
+        try {
+            const saved = localStorage.getItem("lockedProducts");
+            return saved ? JSON.parse(saved) : {};
+        } catch (error) {
+            console.error(
+                "Error loading lockedProducts from localStorage:",
+                error
+            );
+            return {};
+        }
     });
 
     // Lưu lockedProducts vào localStorage khi thay đổi
     useEffect(() => {
-        localStorage.setItem("lockedProducts", JSON.stringify(lockedProducts));
+        try {
+            localStorage.setItem(
+                "lockedProducts",
+                JSON.stringify(lockedProducts)
+            );
+        } catch (error) {
+            console.error(
+                "Error saving lockedProducts to localStorage:",
+                error
+            );
+        }
     }, [lockedProducts]);
 
     // Fetch products và thống kê từ API
@@ -66,7 +83,6 @@ const ProductManagement = () => {
         try {
             setLoading(true);
             setError(null);
-
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -94,6 +110,7 @@ const ProductManagement = () => {
 
             // Xử lý dữ liệu sản phẩm
             const productsData = await productsResponse.json();
+
             if (productsData.success && Array.isArray(productsData.data)) {
                 const formattedProducts = productsData.data.map((item) => {
                     const categoryName =
@@ -102,15 +119,18 @@ const ProductManagement = () => {
                         item.category ||
                         "Không phân loại";
 
+                    // CHỈ SỬ DỤNG lockedProducts TỪ localStorage
                     const isLocked = lockedProducts[item.id] === true;
 
-                    // Xác định trạng thái: locked, active, hoặc received
+                    // Xác định trạng thái dựa trên status từ API VÀ locked status
                     let status = item.status || "active";
+
+                    // Nếu bị khóa, status là "locked"
                     if (isLocked) {
                         status = "locked";
-                    } else if (status === "received") {
-                        status = "received";
                     }
+                    // Nếu không bị khóa, giữ nguyên status từ API
+                    // Có thể là "active" hoặc "received"
 
                     return {
                         id: item.id,
@@ -129,9 +149,33 @@ const ProductManagement = () => {
                             new Date().toISOString(),
                         originalData: item,
                         isLocked: isLocked,
-                        isReceived: status === "received",
+                        isReceived: item.status === "received",
                     };
                 });
+
+                // Kiểm tra và reset nếu có quá nhiều sản phẩm bị khóa
+                const lockedCount = Object.keys(lockedProducts).length;
+                if (lockedCount > 0 && formattedProducts.length > 0) {
+                    const lockedPercentage =
+                        (lockedCount / formattedProducts.length) * 100;
+                    if (lockedPercentage > 50) {
+                        console.warn(
+                            `Phát hiện ${lockedCount}/${
+                                formattedProducts.length
+                            } (${lockedPercentage.toFixed(
+                                1
+                            )}%) sản phẩm bị khóa. Có thể có lỗi.`
+                        );
+
+                        // Tự động reset nếu hơn 80% sản phẩm bị khóa
+                        if (lockedPercentage > 80) {
+                            console.log(
+                                "Tự động reset lockedProducts do quá nhiều sản phẩm bị khóa"
+                            );
+                            setLockedProducts({});
+                        }
+                    }
+                }
 
                 setProducts(formattedProducts);
                 setFilteredProducts(formattedProducts);
@@ -150,7 +194,6 @@ const ProductManagement = () => {
                     const categoryNames = categoriesData.data
                         .map((cat) => cat.name || cat.title || "Không tên")
                         .filter((name) => name !== "Không tên");
-
                     setCategories(categoryNames);
                 }
             }
@@ -159,7 +202,6 @@ const ProductManagement = () => {
             if (statsResponse.ok) {
                 const statsData = await statsResponse.json();
                 console.log("Global Stats API Response:", statsData);
-
                 if (statsData.success && statsData.data) {
                     setStatsData(statsData.data);
                 }
@@ -183,15 +225,12 @@ const ProductManagement = () => {
         try {
             setLoadingDetail(true);
             setError(null);
-
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
 
             const response = await fetch(
                 `${API_URL}/postnewshare/admin-detail/${productId}`,
-                {
-                    signal: controller.signal,
-                }
+                { signal: controller.signal }
             );
 
             clearTimeout(timeoutId);
@@ -246,14 +285,17 @@ const ProductManagement = () => {
         }
 
         if (selectedStatus !== "all") {
+            // Lọc theo trạng thái
             if (selectedStatus === "locked") {
                 result = result.filter((product) => product.isLocked === true);
             } else if (selectedStatus === "active") {
+                // "active" là không bị khóa VÀ không phải "received"
                 result = result.filter(
                     (product) =>
-                        !product.isLocked && product.status === "active"
+                        !product.isLocked && product.status !== "received"
                 );
             } else if (selectedStatus === "received") {
+                // "received" là status từ API
                 result = result.filter(
                     (product) => product.status === "received"
                 );
@@ -276,7 +318,6 @@ const ProductManagement = () => {
             setSelectedProduct(product);
             setLoadingDetail(true);
             setShowDetailModal(true);
-
             const detail = await fetchProductDetail(product.id);
             setProductDetail(detail);
         } catch (error) {
@@ -302,7 +343,6 @@ const ProductManagement = () => {
     const confirmLockAction = async () => {
         try {
             const lockUrl = `${API_URL}/postnewshare/lock/${productToLock.id}`;
-
             console.log(`Calling ${actionType} API:`, lockUrl);
 
             const controller = new AbortController();
@@ -317,7 +357,6 @@ const ProductManagement = () => {
             });
 
             clearTimeout(timeoutId);
-
             const result = await response.json();
             console.log("API Response:", result);
 
@@ -333,6 +372,7 @@ const ProductManagement = () => {
                 setLockedProducts(updatedLockedProducts);
 
                 const updatedLockStatus = actionType === "lock";
+                const updatedStatus = updatedLockStatus ? "locked" : "active";
 
                 setProducts((prev) =>
                     prev.map((p) =>
@@ -340,9 +380,7 @@ const ProductManagement = () => {
                             ? {
                                   ...p,
                                   isLocked: updatedLockStatus,
-                                  status: updatedLockStatus
-                                      ? "locked"
-                                      : "active",
+                                  status: updatedStatus,
                               }
                             : p
                     )
@@ -354,9 +392,7 @@ const ProductManagement = () => {
                             ? {
                                   ...p,
                                   isLocked: updatedLockStatus,
-                                  status: updatedLockStatus
-                                      ? "locked"
-                                      : "active",
+                                  status: updatedStatus,
                               }
                             : p
                     )
@@ -373,7 +409,7 @@ const ProductManagement = () => {
         } catch (error) {
             console.error(`${actionType} error:`, error);
             if (error.name === "AbortError") {
-                alert(`Yêu cầu quá thời gian. Vui lòng thử lại.`);
+                alert("Yêu cầu quá thời gian. Vui lòng thử lại.");
             } else {
                 alert(
                     `❌ Lỗi khi ${
@@ -385,6 +421,32 @@ const ProductManagement = () => {
             setShowLockModal(false);
             setProductToLock(null);
             setActionType("");
+        }
+    };
+
+    // Reset tất cả trạng thái khóa
+    const resetAllLocks = () => {
+        const confirmReset = window.confirm(
+            "Bạn có chắc chắn muốn reset tất cả trạng thái khóa? Tất cả sản phẩm sẽ được mở khóa."
+        );
+
+        if (confirmReset) {
+            setLockedProducts({});
+            setProducts((prev) =>
+                prev.map((p) => ({
+                    ...p,
+                    isLocked: false,
+                    status: p.isReceived ? "received" : "active",
+                }))
+            );
+            setFilteredProducts((prev) =>
+                prev.map((p) => ({
+                    ...p,
+                    isLocked: false,
+                    status: p.isReceived ? "received" : "active",
+                }))
+            );
+            alert("✅ Đã reset tất cả trạng thái khóa!");
         }
     };
 
@@ -423,15 +485,10 @@ const ProductManagement = () => {
     // Thống kê - Sử dụng dữ liệu từ API count-post
     const stats = {
         total: statsData.SumPostShare || products.length,
-        active:
-            statsData.SumPostActive ||
-            products.filter((p) => !p.isLocked && p.status === "active").length,
-        locked:
-            statsData.SumPostLock ||
-            products.filter((p) => p.isLocked === true).length,
-        received:
-            statsData.SumReceivePost ||
-            products.filter((p) => p.status === "received").length,
+        active: products.filter((p) => !p.isLocked && p.status !== "received")
+            .length,
+        locked: products.filter((p) => p.isLocked === true).length,
+        received: products.filter((p) => p.status === "received").length,
         categories: statsData.SumCategory || categories.length || 0,
     };
 
@@ -509,12 +566,26 @@ const ProductManagement = () => {
         <div className="min-h-screen bg-gray-50 p-1 md:p-4 shadow-xl rounded-[10px]">
             {/* Header */}
             <div className="mb-2">
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
-                    Quản lý sản phẩm
-                </h1>
-                <p className="text-gray-600">
-                    Quản lý và theo dõi tất cả sản phẩm được đăng trên hệ thống
-                </p>
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
+                    <div>
+                        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
+                            Quản lý sản phẩm
+                        </h1>
+                        <p className="text-gray-600">
+                            Quản lý và theo dõi tất cả sản phẩm được đăng trên
+                            hệ thống
+                        </p>
+                    </div>
+
+                    {stats.locked > 0 && (
+                        <button
+                            onClick={resetAllLocks}
+                            className="px-3 py-2 bg-red-50 text-red-600 text-sm rounded-lg hover:bg-red-100 transition border border-red-200"
+                        >
+                            🔓 Reset tất cả khóa ({stats.locked})
+                        </button>
+                    )}
+                </div>
             </div>
 
             {/* Thống kê - Cập nhật với 5 ô */}
@@ -706,7 +777,6 @@ const ProductManagement = () => {
                                                     </p>
                                                 </div>
                                             </td>
-
                                             <td className="py-3 px-4">
                                                 <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs">
                                                     <Package className="w-3 h-3" />
@@ -715,7 +785,6 @@ const ProductManagement = () => {
                                                     </span>
                                                 </span>
                                             </td>
-
                                             <td className="py-3 px-4">
                                                 <div className="flex items-center gap-1">
                                                     <MapPin className="w-3 h-3 text-gray-400 flex-shrink-0" />
@@ -724,7 +793,6 @@ const ProductManagement = () => {
                                                     </span>
                                                 </div>
                                             </td>
-
                                             <td className="py-3 px-4">
                                                 <div className="flex items-center gap-1">
                                                     <Calendar className="w-3 h-3 text-gray-400" />
@@ -735,13 +803,11 @@ const ProductManagement = () => {
                                                     </span>
                                                 </div>
                                             </td>
-
                                             <td className="py-3 px-4">
                                                 <div className="space-y-1 min-w-[100px]">
                                                     {renderStatus(product)}
                                                 </div>
                                             </td>
-
                                             <td className="py-3 px-4">
                                                 <div className="flex items-center gap-1">
                                                     <button
@@ -756,7 +822,7 @@ const ProductManagement = () => {
                                                         <Eye className="w-4 h-4" />
                                                     </button>
 
-                                                    {/* Chỉ hiển thị nút khóa/mở khóa cho sản phẩm không bị khóa và chưa nhận */}
+                                                    {/* Chỉ hiển thị nút khóa cho sản phẩm không bị khóa và chưa nhận */}
                                                     {!product.isLocked &&
                                                         product.status !==
                                                             "received" && (
@@ -964,6 +1030,7 @@ const ProductManagement = () => {
                                                         </p>
                                                     </div>
                                                 </div>
+
                                                 <div>
                                                     <label className="text-sm text-gray-500">
                                                         Trạng thái
@@ -990,6 +1057,7 @@ const ProductManagement = () => {
                                                         </p>
                                                     </div>
                                                 </div>
+
                                                 <div>
                                                     <label className="text-sm text-gray-500">
                                                         Người đăng
@@ -1183,7 +1251,6 @@ const ProductManagement = () => {
                                     ? "Sản phẩm sẽ bị khóa và không hiển thị công khai."
                                     : "Sản phẩm sẽ được mở khóa và hiển thị công khai trở lại."}
                             </p>
-
                             <div className="flex gap-3 justify-center">
                                 <button
                                     onClick={() => setShowLockModal(false)}
