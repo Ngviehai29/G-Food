@@ -45,63 +45,32 @@ const ProductManagement = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(6);
 
-    // State lưu trữ trạng thái khóa từ API
-    const [lockedProducts, setLockedProducts] = useState({});
-    const [loadingLockStatus, setLoadingLockStatus] = useState(false);
-
-    // Fetch trạng thái khóa từ API
-    const fetchLockStatus = async () => {
+    // State lưu trữ trạng thái khóa
+    const [lockedProducts, setLockedProducts] = useState(() => {
         try {
-            setLoadingLockStatus(true);
-
-            // Gọi API để lấy danh sách sản phẩm bị khóa
-            // Nếu API chưa có endpoint này, chúng ta sẽ tạo logic để tự động detect
-            const response = await fetch(`${API_URL}/postnewshare/admin`, {
-                signal: AbortSignal.timeout(10000),
-            });
-
-            if (!response.ok) {
-                console.warn(
-                    "Không thể lấy lock status từ API, sử dụng localStorage tạm thời"
-                );
-                const saved = localStorage.getItem("lockedProducts");
-                return saved ? JSON.parse(saved) : {};
-            }
-
-            const result = await response.json();
-
-            if (result.success && Array.isArray(result.data)) {
-                // Tạo map từ dữ liệu API: nếu status = "locked" thì là bị khóa
-                const lockMap = {};
-                result.data.forEach((item) => {
-                    if (item.status === "locked") {
-                        lockMap[item.id] = true;
-                    }
-                });
-                return lockMap;
-            }
-
-            return {};
-        } catch (error) {
-            console.error("Error fetching lock status:", error);
             const saved = localStorage.getItem("lockedProducts");
             return saved ? JSON.parse(saved) : {};
-        } finally {
-            setLoadingLockStatus(false);
+        } catch (error) {
+            console.error(
+                "Error loading lockedProducts from localStorage:",
+                error
+            );
+            return {};
         }
-    };
+    });
 
-    // Lưu trạng thái khóa vào localStorage (fallback)
+    // Lưu lockedProducts vào localStorage khi thay đổi
     useEffect(() => {
         try {
-            if (Object.keys(lockedProducts).length > 0) {
-                localStorage.setItem(
-                    "lockedProducts",
-                    JSON.stringify(lockedProducts)
-                );
-            }
+            localStorage.setItem(
+                "lockedProducts",
+                JSON.stringify(lockedProducts)
+            );
         } catch (error) {
-            console.error("Error saving to localStorage:", error);
+            console.error(
+                "Error saving lockedProducts to localStorage:",
+                error
+            );
         }
     }, [lockedProducts]);
 
@@ -114,11 +83,6 @@ const ProductManagement = () => {
         try {
             setLoading(true);
             setError(null);
-
-            // Fetch lock status trước
-            const lockStatus = await fetchLockStatus();
-            setLockedProducts(lockStatus);
-
             const controller = new AbortController();
             const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -155,10 +119,8 @@ const ProductManagement = () => {
                         item.category ||
                         "Không phân loại";
 
-                    // Sử dụng lock status từ API HOẶC từ state đã fetch
-                    const isLocked =
-                        lockStatus[item.id] === true ||
-                        item.status === "locked";
+                    // CHỈ SỬ DỤNG lockedProducts TỪ localStorage
+                    const isLocked = lockedProducts[item.id] === true;
 
                     // Xác định trạng thái dựa trên status từ API VÀ locked status
                     let status = item.status || "active";
@@ -167,6 +129,8 @@ const ProductManagement = () => {
                     if (isLocked) {
                         status = "locked";
                     }
+                    // Nếu không bị khóa, giữ nguyên status từ API
+                    // Có thể là "active" hoặc "received"
 
                     return {
                         id: item.id,
@@ -188,6 +152,30 @@ const ProductManagement = () => {
                         isReceived: item.status === "received",
                     };
                 });
+
+                // Kiểm tra và reset nếu có quá nhiều sản phẩm bị khóa
+                const lockedCount = Object.keys(lockedProducts).length;
+                if (lockedCount > 0 && formattedProducts.length > 0) {
+                    const lockedPercentage =
+                        (lockedCount / formattedProducts.length) * 100;
+                    if (lockedPercentage > 50) {
+                        console.warn(
+                            `Phát hiện ${lockedCount}/${
+                                formattedProducts.length
+                            } (${lockedPercentage.toFixed(
+                                1
+                            )}%) sản phẩm bị khóa. Có thể có lỗi.`
+                        );
+
+                        // Tự động reset nếu hơn 80% sản phẩm bị khóa
+                        if (lockedPercentage > 80) {
+                            console.log(
+                                "Tự động reset lockedProducts do quá nhiều sản phẩm bị khóa"
+                            );
+                            setLockedProducts({});
+                        }
+                    }
+                }
 
                 setProducts(formattedProducts);
                 setFilteredProducts(formattedProducts);
@@ -297,14 +285,17 @@ const ProductManagement = () => {
         }
 
         if (selectedStatus !== "all") {
+            // Lọc theo trạng thái
             if (selectedStatus === "locked") {
                 result = result.filter((product) => product.isLocked === true);
             } else if (selectedStatus === "active") {
+                // "active" là không bị khóa VÀ không phải "received"
                 result = result.filter(
                     (product) =>
                         !product.isLocked && product.status !== "received"
                 );
             } else if (selectedStatus === "received") {
+                // "received" là status từ API
                 result = result.filter(
                     (product) => product.status === "received"
                 );
@@ -370,7 +361,6 @@ const ProductManagement = () => {
             console.log("API Response:", result);
 
             if (response.ok && result.success) {
-                // Cập nhật state lockedProducts
                 const updatedLockedProducts = { ...lockedProducts };
 
                 if (actionType === "lock") {
@@ -381,7 +371,6 @@ const ProductManagement = () => {
 
                 setLockedProducts(updatedLockedProducts);
 
-                // Cập nhật products và filteredProducts
                 const updatedLockStatus = actionType === "lock";
                 const updatedStatus = updatedLockStatus ? "locked" : "active";
 
@@ -436,54 +425,28 @@ const ProductManagement = () => {
     };
 
     // Reset tất cả trạng thái khóa
-    const resetAllLocks = async () => {
+    const resetAllLocks = () => {
         const confirmReset = window.confirm(
-            "Bạn có chắc chắn muốn mở khóa tất cả sản phẩm đang bị khóa? Thao tác này sẽ gọi API cho từng sản phẩm."
+            "Bạn có chắc chắn muốn reset tất cả trạng thái khóa? Tất cả sản phẩm sẽ được mở khóa."
         );
 
         if (confirmReset) {
-            try {
-                // Lấy danh sách sản phẩm đang bị khóa
-                const lockedProductIds = Object.keys(lockedProducts);
-
-                if (lockedProductIds.length === 0) {
-                    alert("Không có sản phẩm nào đang bị khóa!");
-                    return;
-                }
-
-                // Mở khóa từng sản phẩm
-                for (const productId of lockedProductIds) {
-                    const unlockUrl = `${API_URL}/postnewshare/lock/${productId}`;
-                    await fetch(unlockUrl, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                    });
-                }
-
-                // Reset state
-                setLockedProducts({});
-                setProducts((prev) =>
-                    prev.map((p) => ({
-                        ...p,
-                        isLocked: false,
-                        status: p.isReceived ? "received" : "active",
-                    }))
-                );
-                setFilteredProducts((prev) =>
-                    prev.map((p) => ({
-                        ...p,
-                        isLocked: false,
-                        status: p.isReceived ? "received" : "active",
-                    }))
-                );
-
-                alert(
-                    `✅ Đã mở khóa ${lockedProductIds.length} sản phẩm thành công!`
-                );
-            } catch (error) {
-                console.error("Error resetting locks:", error);
-                alert("❌ Lỗi khi reset khóa. Vui lòng thử lại.");
-            }
+            setLockedProducts({});
+            setProducts((prev) =>
+                prev.map((p) => ({
+                    ...p,
+                    isLocked: false,
+                    status: p.isReceived ? "received" : "active",
+                }))
+            );
+            setFilteredProducts((prev) =>
+                prev.map((p) => ({
+                    ...p,
+                    isLocked: false,
+                    status: p.isReceived ? "received" : "active",
+                }))
+            );
+            alert("✅ Đã reset tất cả trạng thái khóa!");
         }
     };
 
@@ -519,7 +482,7 @@ const ProductManagement = () => {
         }
     };
 
-    // Thống kê
+    // Thống kê - Sử dụng dữ liệu từ API count-post
     const stats = {
         total: statsData.SumPostShare || products.length,
         active: products.filter((p) => !p.isLocked && p.status !== "received")
@@ -611,11 +574,6 @@ const ProductManagement = () => {
                         <p className="text-gray-600">
                             Quản lý và theo dõi tất cả sản phẩm được đăng trên
                             hệ thống
-                            {loadingLockStatus && (
-                                <span className="ml-2 text-xs text-orange-500">
-                                    (Đang đồng bộ trạng thái khóa...)
-                                </span>
-                            )}
                         </p>
                     </div>
 
@@ -624,13 +582,13 @@ const ProductManagement = () => {
                             onClick={resetAllLocks}
                             className="px-3 py-2 bg-red-50 text-red-600 text-sm rounded-lg hover:bg-red-100 transition border border-red-200"
                         >
-                            🔓 Mở khóa tất cả ({stats.locked})
+                            🔓 Reset tất cả khóa ({stats.locked})
                         </button>
                     )}
                 </div>
             </div>
 
-            {/* Thống kê */}
+            {/* Thống kê - Cập nhật với 5 ô */}
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-2">
                 <div className="bg-white rounded-lg p-3 shadow border border-gray-100">
                     <div className="flex items-center justify-between">
@@ -864,6 +822,7 @@ const ProductManagement = () => {
                                                         <Eye className="w-4 h-4" />
                                                     </button>
 
+                                                    {/* Chỉ hiển thị nút khóa cho sản phẩm không bị khóa và chưa nhận */}
                                                     {!product.isLocked &&
                                                         product.status !==
                                                             "received" && (
@@ -880,6 +839,7 @@ const ProductManagement = () => {
                                                             </button>
                                                         )}
 
+                                                    {/* Chỉ hiển thị nút mở khóa cho sản phẩm bị khóa */}
                                                     {product.isLocked && (
                                                         <button
                                                             onClick={() =>
