@@ -557,99 +557,6 @@ const ProductManagement = () => {
         }
     };
 
-    // ĐỒNG BỘ LẠI với server - Refresh data
-    const syncWithServer = async () => {
-        try {
-            setLoading(true);
-            // Gọi lại API để lấy dữ liệu mới nhất từ server
-            const response = await fetch(`${API_URL}/postnewshare/admin`);
-            const result = await response.json();
-
-            if (result.success && Array.isArray(result.data)) {
-                // Giữ nguyên cache lockedProducts
-                const currentLockedProducts = { ...lockedProducts };
-
-                const formattedProducts = result.data.map((item) => {
-                    // Logic xác định locked giống như trong fetchProductsAndStats
-                    let isLocked = false;
-                    let lockSource = "none";
-
-                    if (item.status === "locked" || item.status === "lock") {
-                        isLocked = true;
-                        lockSource = "api-status";
-                    } else if (
-                        item.locked === true ||
-                        item.locked === 1 ||
-                        item.locked === "true"
-                    ) {
-                        isLocked = true;
-                        lockSource = "api-locked";
-                    } else if (
-                        item.isLocked === true ||
-                        item.isLocked === 1 ||
-                        item.isLocked === "true"
-                    ) {
-                        isLocked = true;
-                        lockSource = "api-isLocked";
-                    } else if (
-                        item.is_lock === true ||
-                        item.is_lock === 1 ||
-                        item.is_lock === "true"
-                    ) {
-                        isLocked = true;
-                        lockSource = "api-is_lock";
-                    } else if (
-                        item.lock_status === true ||
-                        item.lock_status === 1 ||
-                        item.lock_status === "locked"
-                    ) {
-                        isLocked = true;
-                        lockSource = "api-lock_status";
-                    } else if (currentLockedProducts[item.id] === true) {
-                        isLocked = true;
-                        lockSource = "cache";
-                    }
-
-                    const isReceived = item.status === "received";
-                    let status = item.status || "active";
-                    if (isLocked) {
-                        status = "locked";
-                    } else if (isReceived) {
-                        status = "received";
-                    }
-
-                    return {
-                        id: item.id,
-                        name: item.name || "Không có tên",
-                        content: item.content || "",
-                        status: status,
-                        category: item.Category?.name || "Không phân loại",
-                        location: item.User?.location || "Chưa có địa điểm",
-                        user: item.User || { name: "Người dùng" },
-                        createdAt: item.createat || new Date().toISOString(),
-                        originalData: item,
-                        isLocked: isLocked,
-                        isReceived: isReceived,
-                        lockSource: lockSource,
-                    };
-                });
-
-                setProducts(formattedProducts);
-                setFilteredProducts(formattedProducts);
-
-                // Refresh thống kê
-                fetchGlobalStats();
-
-                alert("✅ Đã đồng bộ dữ liệu với server!");
-            }
-        } catch (error) {
-            console.error("Error syncing with server:", error);
-            alert("❌ Lỗi khi đồng bộ với server");
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // Reset tất cả trạng thái khóa (CHỈ RESET CLIENT, KHÔNG GỌI API)
     const resetAllLocks = () => {
         const confirmReset = window.confirm(
@@ -819,26 +726,6 @@ const ProductManagement = () => {
                             hệ thống
                             <br />
                         </p>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            onClick={syncWithServer}
-                            className="px-3 py-2 bg-blue-50 text-blue-600 text-sm rounded-lg hover:bg-blue-100 transition border border-blue-200"
-                            title="Đồng bộ dữ liệu với server"
-                        >
-                            🔄 Đồng bộ server
-                        </button>
-
-                        {stats.locked > 0 && (
-                            <button
-                                onClick={resetAllLocks}
-                                className="px-3 py-2 bg-red-50 text-red-600 text-sm rounded-lg hover:bg-red-100 transition border border-red-200"
-                                title="Reset trạng thái khóa trên trình duyệt"
-                            >
-                                🔓 Reset khóa ({stats.locked})
-                            </button>
-                        )}
                     </div>
                 </div>
             </div>
