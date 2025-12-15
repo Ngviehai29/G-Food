@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { X, MapPin, User, Phone, Package, Info, Loader2 } from "lucide-react";
-// Bỏ import Link nếu không cần chuyển hướng ngay sau khi nhấn
-// import { Link } from "react-router-dom";
 
 const PRIMARY_COLOR = "#97b545";
 const HOVER_COLOR = "#7d9931";
@@ -10,11 +8,8 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
     const [productDetail, setProductDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [requestStatus, setRequestStatus] = useState("default");
 
-    // ✨ STATE MỚI: Quản lý trạng thái yêu cầu
-    const [requestStatus, setRequestStatus] = useState("default"); // 'default', 'pending', 'success', 'error'
-
-    // Gọi API khi component mount hoặc product thay đổi
     useEffect(() => {
         if (product && product.id) {
             fetchProductDetail(product.id);
@@ -26,9 +21,9 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
             setLoading(true);
             setError(null);
 
-            // Gọi API chi tiết sản phẩm
+            // Gọi API chi tiết theo ID cụ thể
             const response = await fetch(
-                `https://be-g-food.onrender.com/api/postnewshare/`
+                `https://be-g-food.onrender.com/api/postnewshare/${productId}`
             );
 
             if (!response.ok) {
@@ -37,33 +32,31 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
 
             const data = await response.json();
 
-            if (data.success && Array.isArray(data.data)) {
-                // Tìm sản phẩm theo ID
-                const foundProduct = data.data.find(
-                    (item) => item.id === productId
-                );
+            if (data.success) {
+                // ✨ LẤY TÊN NGƯỜI ĐĂNG TỪ API
+                const userName = data.data.User?.username || "Người chia sẻ";
 
-                if (foundProduct) {
-                    // Format dữ liệu theo API mới
-                    const formattedDetail = {
-                        id: foundProduct.id,
-                        name: foundProduct.name,
-                        images: foundProduct.Post_images || [],
-                        type: foundProduct.Category?.name || "Thực phẩm",
-                        user: foundProduct.User || {},
-                        location:
-                            foundProduct.User?.location || "Chưa có địa điểm",
-                        description:
-                            foundProduct.content ||
-                            "Sản phẩm chất lượng từ cộng đồng G-Food",
-                        contact:
-                            foundProduct.User?.phone || "Liên hệ qua ứng dụng",
-                    };
+                // Format dữ liệu theo API mới
+                const formattedDetail = {
+                    id: data.data.id,
+                    name: data.data.name,
+                    images: data.data.Post_images || [],
+                    type: data.data.Category?.name || "Thực phẩm",
+                    user: {
+                        ...(data.data.User || {}),
+                        name: userName, // ✨ THÊM TÊN VÀO ĐÂY
+                    },
+                    location: data.data.User?.location || "Chưa có địa điểm",
+                    description:
+                        data.data.content ||
+                        "Sản phẩm chất lượng từ cộng đồng G-Food",
+                    contact: data.data.User?.phone || "Liên hệ qua ứng dụng",
+                };
 
-                    setProductDetail(formattedDetail);
-                } else {
-                    setProductDetail(getProductDetail(product));
-                }
+                setProductDetail(formattedDetail);
+            } else {
+                // Fallback nếu API không thành công
+                setProductDetail(getProductDetail(product));
             }
         } catch (error) {
             console.error("Error fetching product detail:", error);
@@ -76,23 +69,13 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
 
     // ✨ HÀM XỬ LÝ KHI NHẤN NÚT "NHẬN SẢN PHẨM"
     const handleReceiveProduct = () => {
-        // Chuyển trạng thái sang "pending" ngay lập tức
         setRequestStatus("pending");
 
-        // Mô phỏng việc gửi yêu cầu tới API
-        // Nếu bạn có API gửi yêu cầu thực tế, hãy đặt nó ở đây
-        // Ví dụ: await sendRequestApi(product.id);
-
-        // Giả lập thời gian xử lý để nút hiển thị "Chờ duyệt"
+        // Giả lập API request
         setTimeout(() => {
-            // Sau khi API xử lý xong (thành công hoặc thất bại)
-            // Bạn có thể chuyển trạng thái (ví dụ: setRequestStatus("success")
-            // và hiển thị thông báo, hoặc giữ nguyên 'pending' nếu yêu cầu cần duyệt thủ công).
+            // Sau khi API xử lý xong
             // setRequestStatus("success");
         }, 1500);
-
-        // Nếu bạn muốn chuyển hướng sang trang nhận sản phẩm sau khi nhấn:
-        // window.location.href = "/receiveproduct";
     };
 
     if (!product) return null;
@@ -102,9 +85,8 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
     const displayImages = productDetail?.images ||
         product.images || [{ image: product.img }];
 
-    // Định nghĩa styles cho nút "Chờ duyệt"
     const isPending = requestStatus === "pending";
-    const pendingBgColor = "#9ca3af"; // Màu xám cho trạng thái chờ
+    const pendingBgColor = "#9ca3af";
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -203,7 +185,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                             Thông tin liên hệ
                         </h3>
                         <div className="space-y-3">
-                            {/* Lấy tên user từ API */}
+                            {/* Lấy tên user từ API - SẼ HIỂN THỊ "nguyên hoàng huy" */}
                             <div className="flex items-start text-gray-700">
                                 <span className="w-28 text-sm flex-shrink-0 pt-0.5">
                                     Người đăng:
@@ -248,7 +230,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                             Đóng
                         </button>
 
-                        {/* ✨ Nút NHẬN SẢN PHẨM/CHỜ DUYỆT ĐÃ ĐƯỢC CẬP NHẬT */}
+                        {/* Nút NHẬN SẢN PHẨM/CHỜ DUYỆT */}
                         <button
                             onClick={
                                 isPending ? undefined : handleReceiveProduct
@@ -261,7 +243,6 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                                         : "hover:shadow-xl"
                                 }`}
                             style={{
-                                // Thay đổi màu nền dựa trên trạng thái
                                 backgroundColor: isPending
                                     ? pendingBgColor
                                     : PRIMARY_COLOR,

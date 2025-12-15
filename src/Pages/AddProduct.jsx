@@ -1,4 +1,3 @@
-// AddProductFixed.js
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUserId } from "../Services/authService";
@@ -8,9 +7,8 @@ const API = process.env.REACT_APP_API_URL;
 
 const AddProductFixed = () => {
     const navigate = useNavigate();
-    const isMounted = useRef(true); // Sử dụng useRef thay vì useState
+    const isMounted = useRef(true);
 
-    // State cực kỳ đơn giản
     const [form, setForm] = useState({
         name: "",
         categoryid: "",
@@ -21,11 +19,11 @@ const AddProductFixed = () => {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
-    const [formErrors, setFormErrors] = useState({}); // Thêm state cho lỗi
+    const [formErrors, setFormErrors] = useState({});
 
     const userId = getCurrentUserId();
 
-    // Cleanup effect - chỉ set ref
+    // Cleanup effect
     useEffect(() => {
         return () => {
             isMounted.current = false;
@@ -52,12 +50,6 @@ const AddProductFixed = () => {
 
                 if (data.success) {
                     setCategories(data.data || []);
-                    // if (data.data?.length > 0) {
-                    //     setForm((prev) => ({
-                    //         ...prev,
-                    //         categoryid: data.data[0].id,
-                    //     }));
-                    // }
                 }
             } catch (error) {
                 console.error("Load categories error:", error);
@@ -69,16 +61,16 @@ const AddProductFixed = () => {
         loadCategories();
     }, [userId]);
 
-    // Xóa tất cả điều kiện mounted từ các hàm xử lý input
+    // Xử lý thay đổi input
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
-        // Xóa lỗi khi người dùng bắt đầu nhập
         if (formErrors[name]) {
             setFormErrors((prev) => ({ ...prev, [name]: "" }));
         }
     };
 
+    // Xử lý chọn ảnh
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -94,6 +86,18 @@ const AddProductFixed = () => {
         }
     };
 
+    // Hàm xóa ảnh đã chọn
+    const handleRemoveImage = () => {
+        setForm((prev) => ({ ...prev, image: null }));
+        const fileInput = document.getElementById("imageUpload");
+        if (fileInput) fileInput.value = "";
+
+        if (formErrors.image) {
+            setFormErrors((prev) => ({ ...prev, image: "" }));
+        }
+    };
+
+    // Validation form
     const validateForm = () => {
         const errors = {};
 
@@ -117,12 +121,12 @@ const AddProductFixed = () => {
         return Object.keys(errors).length === 0;
     };
 
+    // Xử lý submit form
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (submitting) return;
 
-        // Validation với hiển thị lỗi
         if (!validateForm()) {
             alert("Vui lòng điền đầy đủ thông tin được đánh dấu *");
             return;
@@ -159,7 +163,6 @@ const AddProductFixed = () => {
                 });
                 setFormErrors({});
 
-                // Điều hướng đơn giản
                 navigate("/");
             } else {
                 alert(result.message || "Có lỗi xảy ra");
@@ -185,7 +188,7 @@ const AddProductFixed = () => {
                 backgroundRepeat: "no-repeat",
             }}
         >
-            {/* Lớp phủ mờ để làm nổi bật form */}
+            {/* Lớp phủ mờ */}
             <div className="fixed inset-0 bg-black bg-opacity-40"></div>
 
             <div className="mt-20 max-w-3xl mx-auto relative z-10">
@@ -305,7 +308,7 @@ const AddProductFixed = () => {
                                         type="file"
                                         id="imageUpload"
                                         className="hidden"
-                                        accept="image/*"
+                                        accept="image/*,.webp,.jpg,.jpeg,.png,.gif,.bmp"
                                         onChange={handleImageChange}
                                         disabled={submitting}
                                     />
@@ -323,22 +326,104 @@ const AddProductFixed = () => {
                                     >
                                         📁 Chọn Ảnh Sản Phẩm
                                     </label>
+
+                                    {/* Hiển thị ảnh đã chọn với nút X */}
                                     {form.image && (
-                                        <div className="mt-4 p-3 bg-gray-100 rounded-lg">
-                                            <p className="text-sm font-medium">
-                                                📄 {form.image.name}
-                                            </p>
-                                            <p className="text-xs text-gray-500 mt-1">
-                                                Kích thước:{" "}
-                                                {(
-                                                    form.image.size /
-                                                    1024 /
-                                                    1024
-                                                ).toFixed(2)}{" "}
-                                                MB
-                                            </p>
+                                        <div className="mt-4 p-4 bg-gradient-to-r from-gray-50 to-white rounded-xl max-w-full overflow-hidden relative border border-gray-100 shadow-sm">
+                                            {/* Floating close button */}
+                                            <button
+                                                type="button"
+                                                onClick={handleRemoveImage}
+                                                className="absolute top-2 right-2 w-8 h-8 bg-white text-gray-400 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white transition-all duration-300 shadow-md hover:shadow-lg z-10 group"
+                                                title="Xóa ảnh"
+                                                disabled={submitting}
+                                            >
+                                                <svg
+                                                    className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M6 18L18 6M6 6l12 12"
+                                                    />
+                                                </svg>
+                                            </button>
+
+                                            {/* File info */}
+                                            <div className="flex items-center gap-3 pr-10">
+                                                <div className="flex-shrink-0">
+                                                    <div className="w-14 h-14 bg-gradient-to-br from-green-100 to-green-50 rounded-xl flex items-center justify-center border border-green-200 shadow-sm">
+                                                        <svg
+                                                            className="w-7 h-7 text-green-600"
+                                                            fill="currentColor"
+                                                            viewBox="0 0 20 20"
+                                                        >
+                                                            <path
+                                                                fillRule="evenodd"
+                                                                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                                                                clipRule="evenodd"
+                                                            />
+                                                        </svg>
+                                                    </div>
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <p
+                                                        className="text-sm font-bold text-gray-800 truncate"
+                                                        title={form.image.name}
+                                                    >
+                                                        {form.image.name}
+                                                    </p>
+                                                    <div className="flex items-center gap-2 mt-1">
+                                                        <span className="text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                                                            {(
+                                                                form.image
+                                                                    .size /
+                                                                1024 /
+                                                                1024
+                                                            ).toFixed(2)}{" "}
+                                                            MB
+                                                        </span>
+                                                        <span className="text-xs text-gray-500">
+                                                            •
+                                                        </span>
+                                                        <span className="text-xs text-gray-500">
+                                                            {form.image.type
+                                                                .split("/")[1]
+                                                                ?.toUpperCase() ||
+                                                                "ẢNH"}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Image preview with frame */}
+                                            <div className="mt-4 pt-3 border-t border-gray-100">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-medium text-gray-500">
+                                                        XEM TRƯỚC
+                                                    </span>
+                                                    <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded">
+                                                        ✓ ĐÃ CHỌN
+                                                    </span>
+                                                </div>
+                                                <div className="relative w-full h-48 border-2 border-dashed border-gray-200 rounded-xl overflow-hidden bg-gray-50 group">
+                                                    <img
+                                                        src={URL.createObjectURL(
+                                                            form.image
+                                                        )}
+                                                        alt="Preview"
+                                                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                                    />
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                                </div>
+                                            </div>
                                         </div>
                                     )}
+
                                     <p className="mt-4 text-xs text-gray-500">
                                         {form.image
                                             ? "✅ Đã chọn ảnh"
