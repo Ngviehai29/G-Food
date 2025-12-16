@@ -362,8 +362,8 @@ export const Card_Product = () => {
                     apiData.description ||
                     "Sản phẩm được chia sẻ từ cộng đồng G-Food.",
                 contact:
-                    apiData.User?.contact ||
-                    apiData.User?.phone ||
+                    // apiData.User?.contact ||
+                    // apiData.User?.phone ||
                     "Liên hệ qua ứng dụng",
                 userInfo: apiData.User?.name
                     ? `${apiData.User.name} - ${apiData.User.location || ""}`
@@ -376,7 +376,7 @@ export const Card_Product = () => {
         return {
             type: "Thực phẩm",
             description:
-                product.content ||  "Sản phẩm chất lượng từ cộng đồng G-Food.",
+                product.content || "Sản phẩm chất lượng từ cộng đồng G-Food.",
             contact: "Liên hệ qua ứng dụng",
             userInfo: "Người chia sẻ",
             images: [],

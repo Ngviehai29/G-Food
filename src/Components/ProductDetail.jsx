@@ -50,7 +50,7 @@ export const ProductDetail = ({ product, onClose, getProductDetail }) => {
                     description:
                         data.data.content ||
                         "Sản phẩm chất lượng từ cộng đồng G-Food",
-                    contact: data.data.User?.phone || "Liên hệ qua ứng dụng",
+                    contact: "Liên hệ qua ứng dụng",
                 };
 
                 setProductDetail(formattedDetail);
