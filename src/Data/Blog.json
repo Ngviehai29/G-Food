@@ -1,0 +1,57 @@
+
+[
+    {
+        "id": "1",
+        "type": "large",
+        "img": "../G-Food-Images/treemvungcao.jpg",
+        "title": "Nuôi Em",
+        "describe": "Dự án Nuôi Em hướng tới hỗ trợ trẻ em vùng núi, biên giới, hải đảo — đặc biệt là học sinh thuộc hộ nghèo, hộ cận nghèo, con em dân tộc — bằng cách cung cấp bữa trưa đủ dinh dưỡng tại trường. Với 150.000đ/tháng, Nuôi Em mang đến bữa cơm ấm và cơ hội học tập bền vững cho trẻ em vùng sâu, vùng xa.",
+        "date": "13 tháng 5, 2023",
+        "by": "Admin"
+    },
+
+    {
+        "id": "2",
+        "img": "../G-Food-Images/treemvungcao.webp",
+        "title": "Nuôi Em",
+        "describe": "Với 150.000đ/tháng, Nuôi Em mang đến bữa cơm ấm và cơ hội học tập bền vững cho trẻ em vùng sâu, vùng xa.",
+        "date": "13 tháng 5, 2023",
+        "by": "Admin"
+    },
+
+    {
+        "id": "3",
+        "img": "../G-Food-Images/treemvungcao-2.webp",
+        "title": "Miền Viễn Biên Tây Bắc",
+        "describe": "Vùng đất biên giới xa xôi, nằm ở khu vực phía tây của miền Bắc Việt Nam",
+        "date": "1 tháng 7, 2021",
+        "by": "Admin"
+    },
+
+    {
+        "id": "4",
+        "img": "../G-Food-Images/treemvungcao-4.webp",
+        "title": "Tuổi Ấu Thơ",
+        "describe": "Các em dân tộc thiểu số như Chăm, Mông, M’Nông, Hà Nhì… tại các vùng sâu vùng xa",
+        "date": "15 tháng 3, 2006",
+        "by": "Admin"
+    },
+
+    {
+        "id": "5",
+        "img": "../G-Food-Images/treemvungcao.jpg",
+        "title": "Nuôi Em",
+        "describe": "Với 150.000đ/tháng, Nuôi Em mang đến bữa cơm ấm và cơ hội học tập bền vững cho trẻ em vùng sâu, vùng xa.",
+        "date": "13 tháng 5, 2023",
+        "by": "Admin"
+    },
+
+    {
+        "id": "6",
+        "img": "../G-Food-Images/treemvungcao.jpg",
+        "title": "Nuôi Em",
+        "describe": "Với 150.000đ/tháng, Nuôi Em mang đến bữa cơm ấm và cơ hội học tập bền vững cho trẻ em vùng sâu, vùng xa.",
+        "date": "13 tháng 5, 2023",
+        "by": "Admin"
+    }
+]

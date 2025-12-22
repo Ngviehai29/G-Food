@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "img": "https://images2.thanhnien.vn/528068263637045248/2025/8/3/02590ea503728a2cd363-17542142562171441795021.jpg",
+        "name": "Gạo GT25",
+        "quantity": "2",
+        "location": "Thanh Khê, Đà Nẵng"
+    },
+    {
+        "id": 1,
+        "img": "https://media-cdn-v2.laodong.vn/storage/newsportal/2025/6/2/1517123/Thit-Heo-4.jpg",
+        "name": "Thịt Heo",
+        "quantity": "4",
+        "location": "Sơn Trà, Đà Nẵng"
+    },
+    {
+        "id": 1,
+        "img": "https://cf.shopee.vn/file/128356306e041124e072bd49b7017a6c",
+        "name": "Mỳ Tôm",
+        "quantity": "10",
+        "location": "Cẩm lệ, Đà Nẵng"
+    },
+    {
+        "id": 1,
+        "img": "https://lh4.googleusercontent.com/WZW-voWbP5fVvkTi-ud1WjykvPdqItJN25Yra4BrZt-r00K_yBfh6L_xCSYJAW8k4hT6MU8kG2hSoUWKSBmPM7Ws-uy3rPnsJPvAkoUuWVSSN4KKTXIwHOu_1uzuUpN48Pl9QIe7MtnZRBK8N7Y5vdNC5065nsI367c6jOKmAdz1veV0mPptfGMJamA8UN-W",
+        "name": "Rau Muống",
+        "quantity": "12",
+        "location": "Hòa Khánh Nam, Đà Nẵng"
+    },
+    {
+        "id": 1,
+        "img": "https://lh4.googleusercontent.com/WZW-voWbP5fVvkTi-ud1WjykvPdqItJN25Yra4BrZt-r00K_yBfh6L_xCSYJAW8k4hT6MU8kG2hSoUWKSBmPM7Ws-uy3rPnsJPvAkoUuWVSSN4KKTXIwHOu_1uzuUpN48Pl9QIe7MtnZRBK8N7Y5vdNC5065nsI367c6jOKmAdz1veV0mPptfGMJamA8UN-W",
+        "name": "Rau Muống",
+        "quantity": "12",
+        "location": "Hòa Khánh Nam, Đà Nẵng"
+    }
+]
