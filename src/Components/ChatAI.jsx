@@ -28,7 +28,7 @@ export default function ChatAI() {
         const res = await axios.post(
             "https://be-g-food.onrender.com/api/gemini/AI",
             {
-                content: question, // 👈 PHẢI là content
+                content: question,
             },
             {
                 headers: {
@@ -55,7 +55,7 @@ export default function ChatAI() {
 
         try {
             const data = await sendMessageToAI(cauHoi);
-            const traLoi = data.data || "AI không có phản hồi 😢";
+            const traLoi = data.data || "AI không có phản hồi ";
 
             setDanhSachTinNhan((prev) => [
                 ...prev,
@@ -64,7 +64,7 @@ export default function ChatAI() {
         } catch (error) {
             setDanhSachTinNhan((prev) => [
                 ...prev,
-                { role: "AI", text: "Lỗi kết nối AI ❌" },
+                { role: "AI", text: "Lỗi kết nối AI " },
             ]);
         }
 
