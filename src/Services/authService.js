@@ -113,23 +113,10 @@ export const getAllProducts = async () => {
     const res = await axios.get(`${API}/postnewshare/admin`);
     return res.data;
 };
-// Lấy danh sách những người đang chờ duyệt cho 1 bài đăng cụ thể
-export const getPeopleWantToReceive = async (postId) => {
-    const res = await axios.get(`${API}/receivepost/list/${postId}`);
-    return res.data;
-};
 
-// Chấp nhận tặng thực phẩm cho một người dùng nhất định
-export const acceptRecipient = async (postId, receivedId) => {
-    const res = await axios.put(`${API}/receivepost/accept/${postId}/${receivedId}`);
-    return res.data;
-};
 
-// Lấy lịch sử những món đồ mà tôi đã nhận thành công
-export const getMyReceivedHistory = async (userId) => {
-    const res = await axios.get(`${API}/receivepost/history/${userId}`);
-    return res.data;
-};
+
+
 
 
 

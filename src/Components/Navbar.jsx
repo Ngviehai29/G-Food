@@ -492,7 +492,19 @@ export const Navbar = ({ settologin }) => {
                                                 <>
                                                     <Link to="/manage-donations">
                                                         <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
-                                                            Nhận/Duyệt
+                                                            Duyệt
+                                                            <i className="fa-solid fa-clipboard-check text-[13px] pl-[5px]"></i>
+                                                        </button>
+                                                    </Link>
+                                                    <Link to="/receiving">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Nhận
+                                                            <i className="fa-solid fa-clipboard-check text-[13px] pl-[5px]"></i>
+                                                        </button>
+                                                    </Link>
+                                                    <Link to="/historypage">
+                                                        <button className="hover:bg-main hover:text-white transition-all duration-300 rounded-lg w-full p-2 pl-4 flex items-center">
+                                                            Lịch sử nhận
                                                             <i className="fa-solid fa-clipboard-check text-[13px] pl-[5px]"></i>
                                                         </button>
                                                     </Link>

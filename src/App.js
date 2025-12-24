@@ -18,7 +18,9 @@ import { QLyUser } from "./Pages/QLyUser";
 import ProductManagement from "./Pages/ProductManagement";
 import StatisticsManagement from "./Pages/StatisticsManagement";
 import { CategoryManager } from "./Pages/CategoryManager";
-import { ReceiveAndApprove } from "./Pages/ReceiveAndApprove";
+import ApprovalPage from "./Pages/ApprovalPage";
+import ReceivingPage from "./Pages/ReceivingPage"; 
+import HistoryPage from "./Pages/HistoryPage";
 
 
 function App() {
@@ -49,8 +51,9 @@ function App() {
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/inforuser" element={<Infor_User />} />
                     <Route path="/add-product" element={<AddProduct />} />
-                    <Route path="/manage-donations" element={<ReceiveAndApprove />} />
-                   
+                    <Route path="/manage-donations" element={<ApprovalPage />} />
+                    <Route path="/receiving" element={<ReceivingPage />} />
+                    <Route path="/historypage" element={<HistoryPage />} />
                     <Route
                         path="/dashboard"
                         element={
