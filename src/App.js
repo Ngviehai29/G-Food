@@ -34,23 +34,27 @@ function App() {
     return (
         <>
             <div className="App">
-                {location.pathname !== "/signup" && (
+                {/* {location.pathname !== "/signup" && (
                     <Navbar settologin={settologin} />
-                )}
+                )} */}
 
+                {location.pathname !== "/signup" &&
+                    location.pathname !== "/login" && (
+                        <Navbar settologin={settologin} />
+                    )}
                 <Routes>
                     <Route
-                        path="/signup"
+                        path="/login"
                         element={
                             <SignUp tologin={tologin} settologin={settologin} />
                         }
                     />
-                    <Route
+                    {/* <Route
                         path="/login"
                         element={
                             <SignUp tologin={true} settologin={settologin} />
                         }
-                    />
+                    /> */}
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/blog" element={<Blog />} />
@@ -96,7 +100,8 @@ function App() {
                     </Route>
                 </Routes>
 
-                {location.pathname !== "/signup" && <Footer />}
+                {location.pathname !== "/signup" &&
+                    location.pathname !== "/login" && <Footer />}
             </div>
             <Toaster richColors position="top-right" visibleToasts={10} />
         </>
