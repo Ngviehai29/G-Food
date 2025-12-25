@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
-import { Users, CheckCircle, XCircle, Loader2, ArrowRight } from "lucide-react";
-import { getCurrentUserId } from "../Services/authService";
+import { Users, CheckCircle, XCircle, Loader2, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ApprovalPage = () => {
     const [myPosts, setMyPosts] = useState([]); // Danh sách bài viết của tôi
@@ -11,6 +10,10 @@ const ApprovalPage = () => {
     const [modalLoading, setModalLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [currentPost, setCurrentPost] = useState(null);
+
+    // --- PHẦN THÊM MỚI: STATE PHÂN TRANG ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 8; // Số bài viết hiển thị trên 1 trang
 
     const API_URL = process.env.REACT_APP_API_URL || "https://be-g-food.onrender.com/api";
     const currentUserId = JSON.parse(localStorage.getItem("user"))?.id;
@@ -21,28 +24,34 @@ const ApprovalPage = () => {
 
     // 1. Lấy danh sách bài đăng mà tôi đã chia sẻ
     const fetchMyPosts = async () => {
-    if (!currentUserId) {
-        console.error("Không tìm thấy UserId trong localStorage");
-        return;
-    }
+        if (!currentUserId) {
+            console.error("Không tìm thấy UserId trong localStorage");
+            return;
+        }
 
-    setLoading(true);
-    try {
-        // Cập nhật đường dẫn API: thêm dấu '/' và truyền ID trực tiếp vào URL theo ảnh Hoppscotch
-        const res = await axios.get(`${API_URL}/postnewshare/list-user/${currentUserId}`);
-        console.log("Dữ liệu API trả về:", res.data); 
+        setLoading(true);
+        try {
+            const res = await axios.get(`${API_URL}/postnewshare/list-user/${currentUserId}`);
+            const posts = res.data.data || [];
+            setMyPosts(posts);
+        } catch (err) {
+            console.error("Lỗi kết nối API:", err.response?.data || err.message);
+            setMyPosts([]); 
+        } finally {
+            setLoading(false);
+        }
+    };
 
-        // Theo cấu trúc trả về trong ảnh Hoppscotch, dữ liệu nằm trong res.data.data
-        const posts = res.data.data || [];
-        setMyPosts(posts);
+    // --- PHẦN THÊM MỚI: LOGIC TÍNH TOÁN PHÂN TRANG ---
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = myPosts.slice(indexOfFirstPost, indexOfLastPost);
+    const totalPages = Math.ceil(myPosts.length / postsPerPage);
 
-    } catch (err) {
-        console.error("Lỗi kết nối API:", err.response?.data || err.message);
-        setMyPosts([]); // Reset danh sách nếu lỗi
-    } finally {
-        setLoading(false);
-    }
-};
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Cuộn lên đầu khi chuyển trang
+    };
 
     // 2. API SỐ 3: Lấy danh sách user muốn nhận bài post này (id = postID)
     const fetchUsersForPost = async (post) => {
@@ -65,7 +74,6 @@ const ApprovalPage = () => {
             await axios.put(`${API_URL}/receivepost/accept/${currentPost.id}/${receivedID}`);
             toast.success("Đã duyệt thành công cho người dùng này!");
 
-            // Cập nhật lại danh sách tại chỗ để UI thay đổi ngay
             setSelectedUsers(prev => prev.filter(u => u.id !== receivedID));
             if (selectedUsers.length <= 1) setShowModal(false);
             fetchMyPosts();
@@ -75,8 +83,11 @@ const ApprovalPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#fdfaf1] pt-24 pb-12 px-4 md:px-10">
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-[#fdfaf1] pb-12">
+            {/* BOX HEADER MÀU XANH ĐẬM GIỐNG TRANG PROFILE */}
+            <div className='w-full h-[78px] bg-[#0f3714] mb-12'></div>
+
+            <div className="max-w-6xl mx-auto px-4 md:px-10">
                 <header className="text-center mb-12">
                     <h1 className="text-3xl font-black text-gray-800 uppercase tracking-tighter">
                         Duyệt Sản Phẩm Cho <span className="text-main">G-Food</span>
@@ -87,35 +98,70 @@ const ApprovalPage = () => {
                 {loading ? (
                     <div className="flex justify-center items-center h-64"><Loader2 className="animate-spin text-main w-10 h-10" /></div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-white rounded-[32px] border-2 border-green-200 shadow-sm">
-                        {myPosts.length > 0 ? myPosts.map((post) => (
-                            <div key={post.id} className="group bg-green-50/50 rounded-2xl p-3 border border-transparent hover:border-main hover:shadow-md transition-all duration-300">
-                                <div className="relative overflow-hidden rounded-xl h-40 mb-3">
-                                    <img
-                                        src={post.Post_images?.[0]?.image || "https://via.placeholder.com/300"}
-                                        alt={post.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                    />
+                    <>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-6 bg-white rounded-[32px] border-2 border-green-200 shadow-sm">
+                            {currentPosts.length > 0 ? currentPosts.map((post) => (
+                                <div key={post.id} className="group bg-green-50/50 rounded-2xl p-3 border border-transparent hover:border-main hover:shadow-md transition-all duration-300">
+                                    <div className="relative overflow-hidden rounded-xl h-40 mb-3">
+                                        <img
+                                            src={post.Post_images?.[0]?.image || "https://via.placeholder.com/300"}
+                                            alt={post.name}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    </div>
+                                    <h3 className="font-bold text-gray-700 uppercase text-center truncate">{post.name}</h3>
+                                    <button
+                                        onClick={() => fetchUsersForPost(post)}
+                                        className="mt-3 w-full bg-[#ff3b30] hover:bg-red-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors"
+                                    >
+                                        XEM NGƯỜI MUỐN NHẬN <ArrowRight size={14} />
+                                    </button>
                                 </div>
-                                <h3 className="font-bold text-gray-700 uppercase text-center truncate">{post.name}</h3>
-                                <button
-                                    onClick={() => fetchUsersForPost(post)}
-                                    className="mt-3 w-full bg-[#ff3b30] hover:bg-red-500 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-2 transition-colors"
+                            )) : (
+                                <div className="col-span-full text-center py-20 text-gray-400 font-medium">Bạn chưa có bài đăng chia sẻ nào.</div>
+                            )}
+                        </div>
+
+                        {totalPages > 1 && (
+                            <div className="flex justify-center items-center mt-10 gap-2">
+                                <button 
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-30 hover:bg-green-50 transition-colors"
                                 >
-                                    XEM NGƯỜI MUỐN NHẬN <ArrowRight size={14} />
+                                    <ChevronLeft size={20} />
+                                </button>
+                                
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        onClick={() => paginate(index + 1)}
+                                        className={`w-10 h-10 rounded-lg font-bold transition-all ${
+                                            currentPage === index + 1 
+                                            ? "bg-main text-white shadow-md" 
+                                            : "bg-white text-gray-600 border border-gray-100 hover:bg-gray-50"
+                                        }`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+
+                                <button 
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-30 hover:bg-green-50 transition-colors"
+                                >
+                                    <ChevronRight size={20} />
                                 </button>
                             </div>
-                        )) : (
-                            <div className="col-span-full text-center py-20 text-gray-400 font-medium">Bạn chưa có bài đăng chia sẻ nào.</div>
                         )}
-                    </div>
+                    </>
                 )}
             </div>
 
-            {/* MODAL CHI TIẾT NGƯỜI NHẬN */}
+            {/* MODAL CHI TIẾT NGƯỜI NHẬN - GIỮ NGUYÊN */}
             {showModal && (
                 <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
-                    {/* Tăng max-w-4xl để hiển thị dạng lưới nếu có nhiều người đăng ký */}
                     <div className="bg-white rounded-[40px] w-full max-w-4xl overflow-hidden shadow-2xl animate-in zoom-in-95 duration-300">
 
                         {/* Header của Modal */}
@@ -156,13 +202,12 @@ const ApprovalPage = () => {
                                                 {userReq.User?.userName || userReq.User?.username || "Người dùng"}
                                             </p>
 
-                                                <button
-                                                    onClick={() => handleApprove(userReq.id)}
-                                                    className="bg-red-600 text-white text-[8px] px-2 py-1.5 rounded-full font-black uppercase hover:bg-black transition-colors flex-1"
-                                                >
-                                                    Duyệt
-                                                </button>
-                                            
+                                            <button
+                                                onClick={() => handleApprove(userReq.id)}
+                                                className="bg-red-600 text-white text-[8px] px-2 py-1.5 rounded-full font-black uppercase hover:bg-black transition-colors"
+                                            >
+                                                Duyệt
+                                            </button>
                                         </div>
                                     ))}
                                 </div>

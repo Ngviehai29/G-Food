@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
-import { Loader2, X, Phone, MapPin, User } from "lucide-react";
+import { Loader2, X, Phone, MapPin, User, ChevronLeft, ChevronRight } from "lucide-react";
 
 const ReceivingPage = () => {
     const [receivedPosts, setReceivedPosts] = useState([]);
@@ -9,6 +9,10 @@ const ReceivingPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [contactData, setContactData] = useState(null);
     const [loadingContact, setLoadingContact] = useState(false);
+
+    // --- LOGIC PHÂN TRANG ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const postsPerPage = 8; // Số lượng bài viết trên mỗi trang
 
     const API_URL = process.env.REACT_APP_API_URL || "https://be-g-food.onrender.com/api";
     const currentUserId = JSON.parse(localStorage.getItem("user"))?.id;
@@ -29,65 +33,134 @@ const ReceivingPage = () => {
         }
     };
 
-    const handleContact = async (receivePostId) => {
-        setIsModalOpen(true);
-        setLoadingContact(true);
-        setContactData(null); 
-        
-        try {
-            // Sử dụng endpoint Contact User post đã test trên Hoppscotch
-            const url = `${API_URL}/receivepost/contact/${receivePostId}`;
-            const res = await axios.get(url, { params: { requesterId: currentUserId } });
+    // --- TÍNH TOÁN DỮ LIỆU PHÂN TRANG ---
+    const indexOfLastPost = currentPage * postsPerPage;
+    const indexOfFirstPost = indexOfLastPost - postsPerPage;
+    const currentPosts = receivedPosts.slice(indexOfFirstPost, indexOfLastPost);
+    const totalPages = Math.ceil(receivedPosts.length / postsPerPage);
 
-            if (res.data.data && res.data.data.length > 0) {
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleContact = async (post) => {
+        const postID = post.Post_news_share?.id;
+        
+        if (!postID || !currentUserId) {
+            toast.error("Thiếu thông tin người dùng hoặc bài đăng");
+            return;
+        }
+
+        setLoadingContact(true);
+        setIsModalOpen(true);
+
+        try {
+            const res = await axios.get(`${API_URL}/receivepost/contact/${postID}`, {
+                params: { userid: currentUserId }
+            });
+            
+            if (res.data.success && res.data.data && res.data.data.length > 0) {
                 setContactData(res.data.data[0]);
             } else {
-                // Hiển thị thông báo nếu mảng rỗng như trong log
-                toast.info("Yêu cầu này chưa có thông tin liên hệ được duyệt.");
+                setContactData(null);
+                toast.error("Không tìm thấy thông tin liên hệ");
             }
         } catch (err) {
-            toast.error("Lỗi lấy thông tin liên hệ");
+            console.error("Lỗi API:", err.response?.data || err.message);
+            toast.error("Lỗi khi lấy thông tin liên hệ");
+            setContactData(null);
         } finally {
             setLoadingContact(false);
         }
     };
-
+        
     return (
-        <div className="min-h-screen bg-[#fdfaf1] pt-24 pb-12 px-10">
-            {/* THÊM TIÊU ĐỀ BỊ THIẾU Ở ĐÂY */}
-            <header className="text-center mb-12">
-                <h1 className="text-4xl font-black text-black uppercase italic tracking-tighter">
-                    NHẬN SẢN PHẨM
-                </h1>
-                <div className="w-24 h-2 bg-main mx-auto mt-2 rounded-full"></div>
-            </header>
+        <div className="min-h-screen bg-[#fdfaf1] pb-12">
+            {/* BOX HEADER MÀU XANH ĐẬM GIỐNG TRANG PROFILE */}
+            <div className='w-full h-[78px] bg-[#0f3714] mb-12'></div>
 
-            {loading ? (
-                <div className="flex justify-center mt-20"><Loader2 className="animate-spin w-12 h-12 text-main" /></div>
-            ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-                    {receivedPosts.map((post) => (
-                        <div key={post.id} className="bg-[#9df77d] p-4 rounded-[40px] border-2 border-white shadow-xl flex flex-col items-center">
-                            <div className="w-full h-44 bg-white rounded-[30px] overflow-hidden mb-3">
-                                <img
-                                    src={post.Post_news_share?.Post_images?.[0]?.image || "https://via.placeholder.com/300"}
-                                    className="w-full h-full object-cover"
-                                    alt="Product"
-                                />
-                            </div>
-                            <h3 className="font-black text-xl uppercase italic mb-4 text-center">{post.Post_news_share?.name}</h3>
-                            <button
-                                onClick={() => handleContact(post.id)}
-                                className="bg-red-600 text-white px-10 py-2 rounded-full font-black uppercase shadow-md hover:bg-black transition-all active:scale-95"
-                            >
-                                LIÊN HỆ
-                            </button>
+            <div className="px-10">
+                <header className="text-center mb-12">
+                    <h1 className="text-4xl font-black text-black uppercase italic tracking-tighter">
+                        NHẬN SẢN PHẨM
+                    </h1>
+                    <div className="w-24 h-2 bg-main mx-auto mt-2 rounded-full"></div>
+                </header>
+
+                {loading ? (
+                    <div className="flex justify-center mt-20">
+                        <Loader2 className="animate-spin w-12 h-12 text-main" />
+                    </div>
+                ) : (
+                    <div className="max-w-7xl mx-auto">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            {currentPosts.length > 0 ? currentPosts.map((post) => (
+                                <div key={post.id} className="bg-[#9df77d] p-4 rounded-[40px] border-2 border-white shadow-xl flex flex-col items-center">
+                                    <div className="w-full h-44 bg-white rounded-[30px] overflow-hidden mb-3">
+                                        <img
+                                            src={post.Post_news_share?.Post_images?.[0]?.image || "https://via.placeholder.com/300"}
+                                            className="w-full h-full object-cover"
+                                            alt="Product"
+                                        />
+                                    </div>
+                                    <h3 className="font-black text-xl uppercase italic mb-4 text-center truncate w-full px-2">
+                                        {post.Post_news_share?.name}
+                                    </h3>
+                                    <button
+                                        onClick={() => handleContact(post)}
+                                        className="bg-red-600 text-white px-10 py-2 rounded-full font-black uppercase shadow-md hover:bg-black transition-all active:scale-95"
+                                    >
+                                        LIÊN HỆ
+                                    </button>
+                                </div>
+                            )) : (
+                                <div className="col-span-full text-center py-20 text-gray-400 font-bold uppercase italic">
+                                    Bạn chưa có yêu cầu nhận nào.
+                                </div>
+                            )}
                         </div>
-                    ))}
-                </div>
-            )}
 
-            {/* MODAL LIÊN HỆ (Sử dụng cấu trúc data[0].Post_news_share.User) */}
+                        {/* --- UI ĐIỀU HƯỚNG PHÂN TRANG --- */}
+                        {totalPages > 1 && (
+                            <div className="flex justify-center items-center mt-12 gap-3">
+                                <button 
+                                    onClick={() => paginate(currentPage - 1)}
+                                    disabled={currentPage === 1}
+                                    className="p-2 rounded-xl bg-white border-2 border-black disabled:opacity-30 hover:bg-main transition-colors"
+                                >
+                                    <ChevronLeft size={24} />
+                                </button>
+                                
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <button
+                                        key={index + 1}
+                                        onClick={() => paginate(index + 1)}
+                                        className={`w-12 h-12 rounded-xl font-black border-2 border-black transition-all ${
+                                            currentPage === index + 1 
+                                            ? "bg-main text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -translate-y-1" 
+                                            : "bg-white text-black hover:bg-gray-100"
+                                        }`}
+                                    >
+                                        {index + 1}
+                                    </button>
+                                ))}
+
+                                <button 
+                                    onClick={() => paginate(currentPage + 1)}
+                                    disabled={currentPage === totalPages}
+                                    className="p-2 rounded-xl bg-white border-2 border-black disabled:opacity-30 hover:bg-main transition-colors"
+                                >
+                                    <ChevronRight size={24} />
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+        
+
+            {/* MODAL LIÊN HỆ - GIỮ NGUYÊN TOÀN BỘ */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
                     <div className="bg-white w-full max-w-md rounded-[40px] border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative p-8 animate-in zoom-in-95">
