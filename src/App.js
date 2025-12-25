@@ -19,9 +19,8 @@ import ProductManagement from "./Pages/ProductManagement";
 import StatisticsManagement from "./Pages/StatisticsManagement";
 import { CategoryManager } from "./Pages/CategoryManager";
 import ApprovalPage from "./Pages/ApprovalPage";
-import ReceivingPage from "./Pages/ReceivingPage"; 
+import ReceivingPage from "./Pages/ReceivingPage";
 import HistoryPage from "./Pages/HistoryPage";
-
 
 function App() {
     const location = useLocation();
@@ -46,12 +45,21 @@ function App() {
                             <SignUp tologin={tologin} settologin={settologin} />
                         }
                     />
+                    <Route
+                        path="/login"
+                        element={
+                            <SignUp tologin={true} settologin={settologin} />
+                        }
+                    />
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/inforuser" element={<Infor_User />} />
                     <Route path="/add-product" element={<AddProduct />} />
-                    <Route path="/manage-donations" element={<ApprovalPage />} />
+                    <Route
+                        path="/manage-donations"
+                        element={<ApprovalPage />}
+                    />
                     <Route path="/receiving" element={<ReceivingPage />} />
                     <Route path="/historypage" element={<HistoryPage />} />
                     <Route
@@ -59,19 +67,32 @@ function App() {
                         element={
                             <AdminRoute>
                                 <Dashboard />
-                            </AdminRoute>}>
-                        <Route path="" element={<div className="mb-8 text-center mt-10">
-                            <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
-                                TRANG QUẢN LÝ HỆ THỐNG
-                            </h1>
-                            <p className="text-gray-600">
-                                Bắt đầu bằng cách chọn một mục quản lý
-                            </p>
-                        </div>} />
+                            </AdminRoute>
+                        }
+                    >
+                        <Route
+                            path=""
+                            element={
+                                <div className="mb-8 text-center mt-10">
+                                    <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
+                                        TRANG QUẢN LÝ HỆ THỐNG
+                                    </h1>
+                                    <p className="text-gray-600">
+                                        Bắt đầu bằng cách chọn một mục quản lý
+                                    </p>
+                                </div>
+                            }
+                        />
                         <Route path="qluser" element={<QLyUser />} />
                         <Route path="category" element={<CategoryManager />} />
-                        <Route path="products" element={<ProductManagement />} />
-                        <Route path="statistics" element={<StatisticsManagement />} />
+                        <Route
+                            path="products"
+                            element={<ProductManagement />}
+                        />
+                        <Route
+                            path="statistics"
+                            element={<StatisticsManagement />}
+                        />
                     </Route>
                 </Routes>
 
