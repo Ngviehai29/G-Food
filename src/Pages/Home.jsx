@@ -8,6 +8,7 @@ import tree from "../G-Food-Images/tree-01.svg";
 import { Card_Product } from "../Components/Card_Product";
 import { Link } from "react-router-dom";
 import { Card_Blog_Slide } from "../Components/Card_Blog_Slide";
+import ChatAI from "../Components/ChatAI";
 
 export const Home = () => {
     const ref = useRef(null);
@@ -143,7 +144,9 @@ export const Home = () => {
                     <Card_Product />
                 </div>
             </div>
-
+                        <div className='abc'>
+        <ChatAI />
+      </div>
             {/* Blog */}
             <div className="mt-8 bg-[#F2F4F7] py-1">
                 <Card_Blog_Slide />
