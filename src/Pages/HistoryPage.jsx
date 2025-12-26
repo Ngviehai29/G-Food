@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
-import { Loader2, X, ChevronLeft, ChevronRight } from "lucide-react"; // Thêm icon điều hướng
+import { Loader2, X, ChevronLeft, ChevronRight } from "lucide-react"; 
 
 import { getCurrentUserId } from "../Services/authService"; 
 
@@ -15,8 +15,7 @@ const HistoryPage = () => {
 
     // --- LOGIC PHÂN TRANG ---
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 10; // Hiển thị 10 dòng mỗi trang
-
+    const itemsPerPage = 10; 
     const API_URL = process.env.REACT_APP_API_URL || "https://be-g-food.onrender.com/api";
     const currentUserId = getCurrentUserId(); 
 
@@ -89,7 +88,7 @@ const HistoryPage = () => {
 
     return (
         <div className="min-h-screen bg-white pb-12">
-            {/* BOX HEADER MÀU XANH ĐẬM GIỐNG TRANG PROFILE */}
+            
             <div className='w-full h-[78px] bg-[#0f3714] mb-12'></div>
 
             <div className="px-4 md:px-10">
@@ -181,7 +180,7 @@ const HistoryPage = () => {
                     </div>
                 )}
             </div>
-            {/* MODAL ĐÁNH GIÁ - GIỮ NGUYÊN */}
+            {/* MODAL ĐÁNH GIÁ*/}
             {showModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
                     <div className="bg-white w-full max-w-sm rounded-[40px] border-4 border-[#3ecfef] shadow-2xl relative p-6 animate-in zoom-in-95 duration-200">
@@ -192,12 +191,11 @@ const HistoryPage = () => {
                         <div className="flex flex-col items-center">
                             <div className="w-full h-44 bg-[#9df77d] rounded-[30px] border-4 border-white shadow-lg overflow-hidden mb-4">
                                 <img
-                                    src={selectedItem?.Post_news_share?.Post_images?.[0]?.image || "https://via.placeholder.com/300"}
+                                    src={selectedItem?.Post_news_share?.Post_images?.image || "https://via.placeholder.com/300"}
                                     className="w-full h-full object-cover"
                                     alt="product"
                                 />
                             </div>
-
                             <h2 className="text-xl font-black uppercase italic text-center">{selectedItem?.Post_news_share?.name}</h2>
                             <p className="text-gray-500 text-[10px] font-bold mb-4 italic">Người cho: {selectedItem?.Post_news_share?.User?.UserNamePost}</p>
 
