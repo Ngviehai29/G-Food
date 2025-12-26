@@ -18,11 +18,9 @@ import { QLyUser } from "./Pages/QLyUser";
 import ProductManagement from "./Pages/ProductManagement";
 import StatisticsManagement from "./Pages/StatisticsManagement";
 import { CategoryManager } from "./Pages/CategoryManager";
-import Browseproducts from "./Pages/Browseproducts";
-import HistoryReceiveProduct from "./Pages/HistoryReceiveProduct";
-import SharerProducts from "./Pages/SharerProducts";
-import ReceiveProductPage from "./Pages/ReceiveProductPage";
-
+import ApprovalPage from "./Pages/ApprovalPage";
+import ReceivingPage from "./Pages/ReceivingPage";
+import HistoryPage from "./Pages/HistoryPage";
 
 function App() {
     const location = useLocation();
@@ -36,10 +34,14 @@ function App() {
     return (
         <>
             <div className="App">
-                {location.pathname !== "/signup" && (
+                {/* {location.pathname !== "/signup" && (
                     <Navbar settologin={settologin} />
-                )}
+                )} */}
 
+                {location.pathname !== "/signup" &&
+                    location.pathname !== "/login" && (
+                        <Navbar settologin={settologin} />
+                    )}
                 <Routes>
                     <Route
                         path="/signup"
@@ -47,40 +49,59 @@ function App() {
                             <SignUp tologin={tologin} settologin={settologin} />
                         }
                     />
+                    {/* <Route
+                        path="/login"
+                        element={
+                            <SignUp tologin={true} settologin={settologin} />
+                        }
+                    /> */}
                     <Route path="/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/inforuser" element={<Infor_User />} />
                     <Route path="/add-product" element={<AddProduct />} />
-                    <Route path="/manage-requests" element={<SharerProducts />} />
-                    <Route path="/receive-products" element={<ReceiveProductPage />} />
-                    <Route path="/manage-requests/:productId" element={<Browseproducts />} />
-                    <Route path="/history-received" element={<HistoryReceiveProduct />
-                           
-                        }
+                    <Route
+                        path="/manage-donations"
+                        element={<ApprovalPage />}
                     />
+                    <Route path="/receiving" element={<ReceivingPage />} />
+                    <Route path="/historypage" element={<HistoryPage />} />
                     <Route
                         path="/dashboard"
                         element={
                             <AdminRoute>
                                 <Dashboard />
-                            </AdminRoute>}>
-                        <Route path="" element={<div className="mb-8 text-center mt-10">
-                            <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
-                                TRANG QUẢN LÝ HỆ THỐNG
-                            </h1>
-                            <p className="text-gray-600">
-                                Bắt đầu bằng cách chọn một mục quản lý
-                            </p>
-                        </div>} />
+                            </AdminRoute>
+                        }
+                    >
+                        <Route
+                            path=""
+                            element={
+                                <div className="mb-8 text-center mt-10">
+                                    <h1 className="text-xl md:text-3xl font-bold text-gray-800 mb-2">
+                                        TRANG QUẢN LÝ HỆ THỐNG
+                                    </h1>
+                                    <p className="text-gray-600">
+                                        Bắt đầu bằng cách chọn một mục quản lý
+                                    </p>
+                                </div>
+                            }
+                        />
                         <Route path="qluser" element={<QLyUser />} />
                         <Route path="category" element={<CategoryManager />} />
-                        <Route path="products" element={<ProductManagement />} />
-                        <Route path="statistics" element={<StatisticsManagement />} />
+                        <Route
+                            path="products"
+                            element={<ProductManagement />}
+                        />
+                        <Route
+                            path="statistics"
+                            element={<StatisticsManagement />}
+                        />
                     </Route>
                 </Routes>
 
-                {location.pathname !== "/signup" && <Footer />}
+                {location.pathname !== "/signup" &&
+                    location.pathname !== "/login" && <Footer />}
             </div>
             <Toaster richColors position="top-right" visibleToasts={10} />
         </>
