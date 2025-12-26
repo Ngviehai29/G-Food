@@ -150,7 +150,7 @@ export default function ChatAI() {
                     className="w-full h-[330px] bg-gray-100 rounded-lg p-3 overflow-y-auto"
                 >
                     <p className="text-green-700 italic">
-                        Xin chào! Tôi là con AI lỏ nhất Trái Đất 😎
+                        Xin chào! Tôi có thể giúp gì được cho bạn!
                     </p>
 
                     {danhSachTinNhan.map((msg, index) => (

@@ -34,7 +34,7 @@ const AddProductFixed = () => {
     useEffect(() => {
         if (!userId) {
             alert("Vui lòng đăng nhập!");
-            navigate("/login");
+            navigate("/signup");
         }
     }, [userId, navigate]);
 
