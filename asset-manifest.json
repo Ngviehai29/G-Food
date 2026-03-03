@@ -1,0 +1,33 @@
+{
+  "files": {
+    "main.css": "/G-Food/static/css/main.6419e46e.css",
+    "main.js": "/G-Food/static/js/main.f4c59e50.js",
+    "static/js/453.defa7c9a.chunk.js": "/G-Food/static/js/453.defa7c9a.chunk.js",
+    "static/media/about-3-ver4-invert.svg": "/G-Food/static/media/about-3-ver4-invert.e3e6494e1ed8f8cf45e6f5ffca1fdc07.svg",
+    "static/media/treemvungcao-3.webp": "/G-Food/static/media/treemvungcao-3.c1a55d6e092eec4e614f.webp",
+    "static/media/lua-2.jpg": "/G-Food/static/media/lua-2.677022d9d6bcde5da439.jpg",
+    "static/media/slide-04.jpg": "/G-Food/static/media/slide-04.9efc452b627086906478.jpg",
+    "static/media/treemvungcao.jpg": "/G-Food/static/media/treemvungcao.b5c626af567bc09e3408.jpg",
+    "static/media/blog-1.jpg": "/G-Food/static/media/blog-1.e07503bb2698b916b26a.jpg",
+    "static/media/AddProduct.jpg": "/G-Food/static/media/AddProduct.0cadbc3e03529c053d6a.jpg",
+    "static/media/slogan.svg": "/G-Food/static/media/slogan.c8730452a1512926b75360abc57c6a8a.svg",
+    "static/media/treemvungcao.webp": "/G-Food/static/media/treemvungcao.80f7baab903231876085.webp",
+    "static/media/grass_footer.svg": "/G-Food/static/media/grass_footer.388ba08b7db90d1e3880abd69ec4297c.svg",
+    "static/media/grass02.svg": "/G-Food/static/media/grass02.d6e18d2fb02442cf6bf0d9a080f3bffd.svg",
+    "static/media/woman.png": "/G-Food/static/media/woman.3f889d0af5f26871fbcc.png",
+    "static/media/grass1.svg": "/G-Food/static/media/grass1.a8abf1d169978d337e127e51dd592d52.svg",
+    "static/media/avata_man.png": "/G-Food/static/media/avata_man.5faf09a7795d28bf5a2b.png",
+    "static/media/icon_search.svg": "/G-Food/static/media/icon_search.da12528c4a4dca2a6e80bf8677526d34.svg",
+    "static/media/google-maps.png": "/G-Food/static/media/google-maps.c31a78171b7e5c196cac.png",
+    "static/media/tree-01.svg": "/G-Food/static/media/tree-01.785a91e16994f41c06732cc1c207573e.svg",
+    "index.html": "/G-Food/index.html",
+    "static/media/leaf.svg": "/G-Food/static/media/leaf.9aa9caa2921bae05943768a82eae4343.svg",
+    "main.6419e46e.css.map": "/G-Food/static/css/main.6419e46e.css.map",
+    "main.f4c59e50.js.map": "/G-Food/static/js/main.f4c59e50.js.map",
+    "453.defa7c9a.chunk.js.map": "/G-Food/static/js/453.defa7c9a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6419e46e.css",
+    "static/js/main.f4c59e50.js"
+  ]
+}
