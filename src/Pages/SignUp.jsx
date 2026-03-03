@@ -204,7 +204,7 @@ export const SignUp = ({ tologin, settologin }) => {
                             <button onClick={() => settologin(false)} className='text-[#00000080] font-nomal mt-12 inline-block items-center hover:text-black transition-all duration-300'>Đăng nhập<i class="fa-solid fa-arrow-right-long text-[10px] pl-1"></i></button>
 
                         </div>
-                        <Link to='/' className="text-[#00000080] transition-all duration-300 text-[14px] font-nomal inline-block text-center w-full mt-8 hover:text-main">
+                        <Link to='/G-Food/' className="text-[#00000080] transition-all duration-300 text-[14px] font-nomal inline-block text-center w-full mt-8 hover:text-main">
                             Tiếp tục với Green Food.
                         </Link>
                     </div>
