@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/G-Food/static/css/main.6419e46e.css",
-    "main.js": "/G-Food/static/js/main.b7cc9d7a.js",
+    "main.js": "/G-Food/static/js/main.03edb4ab.js",
     "static/js/453.defa7c9a.chunk.js": "/G-Food/static/js/453.defa7c9a.chunk.js",
     "static/media/about-3-ver4-invert.svg": "/G-Food/static/media/about-3-ver4-invert.e3e6494e1ed8f8cf45e6f5ffca1fdc07.svg",
     "static/media/treemvungcao-3.webp": "/G-Food/static/media/treemvungcao-3.c1a55d6e092eec4e614f.webp",
@@ -23,11 +23,11 @@
     "index.html": "/G-Food/index.html",
     "static/media/leaf.svg": "/G-Food/static/media/leaf.9aa9caa2921bae05943768a82eae4343.svg",
     "main.6419e46e.css.map": "/G-Food/static/css/main.6419e46e.css.map",
-    "main.b7cc9d7a.js.map": "/G-Food/static/js/main.b7cc9d7a.js.map",
+    "main.03edb4ab.js.map": "/G-Food/static/js/main.03edb4ab.js.map",
     "453.defa7c9a.chunk.js.map": "/G-Food/static/js/453.defa7c9a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.6419e46e.css",
-    "static/js/main.b7cc9d7a.js"
+    "static/js/main.03edb4ab.js"
   ]
 }
