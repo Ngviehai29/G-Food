@@ -14,7 +14,7 @@ export const Navbar = ({ settologin }) => {
     const navigate = useNavigate();
     const handleLogout = async () => {
         Auth.logout();
-        navigate("/");
+        navigate("/G-Food/");
     };
 
     const [scrolled, setScrolled] = useState(false);
@@ -292,7 +292,7 @@ export const Navbar = ({ settologin }) => {
             >
                 <div className="w-[30%]">
                     <Link
-                        to="/"
+                        to="/G-Food/"
                         className="Logo text-[#97b545] font-bold text-[32px] font-['Dancing_Script'] relative pl-[12px]"
                     >
                         G-{" "}

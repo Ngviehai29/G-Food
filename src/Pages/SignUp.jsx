@@ -47,7 +47,7 @@ export const SignUp = ({ tologin, settologin }) => {
             // localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.data));
             // console.log(data)
-            navigate("/");
+            navigate("/G-Food/");
         } catch (err) {
             console.error(err);
 
@@ -254,7 +254,7 @@ export const SignUp = ({ tologin, settologin }) => {
                                 onClick={handleSubmitLogin}>Đăng Nhập</button>
                             <button onClick={() => settologin(true)} className='text-[#00000080] font-nomal mt-12 inline-block items-center hover:text-black transition-all duration-300'>Đăng Ký<i class="fa-solid fa-reply text-[12px] pl-1 scale-y-[-1]"></i></button>
                         </div>
-                        <Link to='/' className="text-[#00000080] transition-all duration-300 text-[14px] font-nomal inline-block text-center w-full mt-8 hover:text-main">
+                        <Link to='/G-Food/' className="text-[#00000080] transition-all duration-300 text-[14px] font-nomal inline-block text-center w-full mt-8 hover:text-main">
                             Tiếp tục với Green Food.
                         </Link>
 
