@@ -317,7 +317,7 @@ export const Navbar = ({ settologin }) => {
                     >
                         <li>
                             <Link
-                                to="/"
+                                to="/G-Food/"
                                 className={`transition-all duration-300 ${scrolled
                                     ? "text-[#000000db] hover:text-[#0000008b]"
                                     : "hover:text-[#ffffffa6]"

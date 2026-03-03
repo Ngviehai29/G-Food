@@ -55,7 +55,7 @@ function App() {
                             <SignUp tologin={true} settologin={settologin} />
                         }
                     /> */}
-                    <Route path="/" element={<Home />} />
+                    <Route path="/G-Food/" element={<Home />} />
                     <Route path="/about" element={<About />} />
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/inforuser" element={<Infor_User />} />
